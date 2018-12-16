@@ -1545,6 +1545,7 @@
 #include "code\modules\paperwork\photography.dm"
 #include "code\modules\paperwork\silicon_photography.dm"
 #include "code\modules\paperwork\stamps.dm"
+#include "code\modules\podzemka\code\surface.dm"
 #include "code\modules\power\apc.dm"
 #include "code\modules\power\cable.dm"
 #include "code\modules\power\cable_heavyduty.dm"
