@@ -3,7 +3,7 @@
 /obj/structure/flora/mushroom
 	name = "mushroom"
 	desc = "It's just a small green mushroom, nothing special about it. Why is it green? Radiation, i guess."
-	icon = 'code\modules\podzemka\icons\surface.dmi'
+	icon = 'code/modules/podzemka/icons/surface.dmi'
 	icon_state = "mushroom_1"
 	anchored = 1
 
@@ -14,7 +14,7 @@
 // Tall Grass //
 /obj/structure/flora/tall_grass
 	name = "tall grass"
-	icon = 'code\modules\podzemka\icons\surface.dmi'
+	icon = 'code/modules/podzemka/icons/surface.dmi'
 	icon_state = "tall_grass_1"
 	anchored = 1
 
@@ -25,7 +25,7 @@
 // Dense Grass //
 /obj/structure/flora/dense_grass
 	name = "dense grass"
-	icon = 'code\modules\podzemka\icons\surface.dmi'
+	icon = 'code/modules/podzemka/icons/surface.dmi'
 	icon_state = "dense_grass_1"
 	anchored = 1
 
@@ -36,7 +36,7 @@
 // Brushwood //
 /obj/structure/flora/brushwood
 	name = "brushwood"
-	icon = 'code\modules\podzemka\icons\surface.dmi'
+	icon = 'code/modules/podzemka/icons/surface.dmi'
 	icon_state = "brushwood_1"
 	anchored = 1
 

@@ -654,6 +654,10 @@
 	icon_state = "fancytable_black"
 	parts = /obj/item/weapon/table_parts/wood/fancy/black
 
+/obj/structure/table/woodentable/fancy/red
+	icon_state = "fancytable_red"
+	parts = /obj/item/weapon/table_parts/wood/fancy/red
+
 /*
  * Reinforced tables
  */

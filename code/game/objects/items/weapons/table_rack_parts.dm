@@ -111,6 +111,16 @@
 	qdel(src)
 	return
 
+/obj/item/weapon/table_parts/wood/fancy/red/attackby(obj/item/weapon/W, mob/user)
+	if (istype(W, /obj/item/weapon/wrench))
+		new /obj/item/stack/sheet/wood( user.loc )
+		qdel(src)
+
+/obj/item/weapon/table_parts/wood/fancy/red/attack_self(mob/user)
+	new /obj/structure/table/woodentable/fancy/red( user.loc )
+	user.drop_item()
+	qdel(src)
+	return
 
 /*
  * Poker Table Parts
