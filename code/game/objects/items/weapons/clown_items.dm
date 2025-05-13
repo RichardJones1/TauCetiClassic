@@ -22,7 +22,7 @@
 
 /obj/item/weapon/bananapeel/atom_init()
 	. = ..()
-	AddComponent(/datum/component/slippery, 2)
+	AddComponent(/datum/component/slippery, 20)
 
 /obj/item/weapon/bananapeel/honk
 	name = "Clowny banana peel"
