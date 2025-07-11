@@ -48,8 +48,10 @@
 			F.amount = 1
 			F.add_fingerprint(M)
 			F.icon_state = "fingerprint1"
+			F.item_state_inventory = "fingerprint1"
 			F.item_state_world = "fingerprint1_world"
 			F.name = text("FPrintC- '[M.name]'")
+			F.update_world_icon()
 
 			to_chat(user, "<span class='notice'>Done printing.</span>")
 		to_chat(user, "<span class='notice'>[M]'s Fingerprints: [md5(M.dna.uni_identity)]</span>")
