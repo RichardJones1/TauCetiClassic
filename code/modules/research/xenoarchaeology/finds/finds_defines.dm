@@ -187,6 +187,9 @@ var/global/list/finds_as_strings = list(
 	"Metamorphic/sedimentary rock composite",
 	"Anomalous material")
 
+/proc/get_random_find()
+	return
+
 #undef ARCHAEO_BOWL
 #undef ARCHAEO_URN
 #undef ARCHAEO_CUTLERY

@@ -12,29 +12,9 @@
 */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Rock sliver
-
-/obj/item/weapon/rocksliver
-	name = "rock sliver"
-	desc = "It looks extremely delicate."
-	icon = 'icons/obj/xenoarchaeology/tools.dmi'
-	icon_state = "sliver1"	//0-4
-	w_class = SIZE_MINUSCULE
-	sharp = 1
-	//item_state = "electronic"
-	var/source_rock = /turf/simulated/mineral
-	var/datum/geosample/geological_data
-
-/obj/item/weapon/rocksliver/atom_init()
-	. = ..()
-	icon_state = "sliver[rand(1,3)]"
-	pixel_x = rand(0,16)-8
-	pixel_y = rand(0,8)-8
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Geosample datum
 
-/datum/geosample
+/datum/geodata
 	var/age = 0								//age can correspond to different archaeological finds
 	var/age_thousand = 0
 	var/age_million = 0
@@ -47,12 +27,12 @@
 	//all potential finds are initialised to null, so nullcheck before you access them
 	var/list/find_presence = list()
 
-/datum/geosample/New(turf/simulated/mineral/container)
+/datum/geodata/New(turf/simulated/mineral/container)
 
 	UpdateTurf(container)
 
 //this should only need to be called once
-/datum/geosample/proc/UpdateTurf(turf/simulated/mineral/container)
+/datum/geodata/proc/UpdateTurf(turf/simulated/mineral/container)
 	//set background = 1
 	if(!container || !istype(container))
 		return
@@ -108,7 +88,7 @@
 	//loop over finds, grab any relevant stuff
 	for(var/datum/find/F in container.finds)
 		var/responsive_reagent = get_responsive_reagent(F.find_type)
-		find_presence[responsive_reagent] = F.dissonance_spread
+		//find_presence[responsive_reagent] = F.dissonance_spread
 
 	//loop over again to reset values to percentages
 	var/total_presence = 0
@@ -121,7 +101,7 @@
 		total_spread += find_presence[entry]*/
 
 //have this separate from UpdateTurf() so that we dont have a billion turfs being updated (redundantly) every time an artifact spawns
-/datum/geosample/proc/UpdateNearbyArtifactInfo(turf/simulated/mineral/container)
+/datum/geodata/proc/UpdateNearbyArtifactInfo(turf/simulated/mineral/container)
 	if(!container || !istype(container))
 		return
 

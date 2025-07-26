@@ -3,7 +3,6 @@
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "ore2"
 	w_class = SIZE_TINY
-	var/datum/geosample/geologic_data
 	var/oretag
 	var/points = 0
 	var/refined_type = null //What this ore defaults to being refined into
@@ -107,13 +106,6 @@
 	pixel_y = rand(0,8)-8
 	if(is_mining_level(z))
 		SSStatistics.score.oremined++ //When ore spawns, increment score.  Only include ore spawned on mining asteroid.
-
-/obj/item/weapon/ore/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/device/core_sampler))
-		var/obj/item/device/core_sampler/C = I
-		C.sample_item(src, user)
-	else
-		return ..()
 
 /obj/item/weapon/ore/use(used, transfer = FALSE)
 	if(used == 1)

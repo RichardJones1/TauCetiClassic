@@ -271,7 +271,7 @@
 
 		//work out data
 		var/data = " - Mundane object: [scanned_item.desc ? scanned_item.desc : "No information on record."]<br>"
-		var/datum/geosample/G
+		var/datum/geodata/G
 		switch(scanned_item.type)
 			if(/obj/item/weapon/ore)
 				var/obj/item/weapon/ore/O = scanned_item

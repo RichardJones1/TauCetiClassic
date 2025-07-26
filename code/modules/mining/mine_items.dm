@@ -179,7 +179,7 @@ var/global/mining_shuttle_location = 0 // 0 = station 13, 1 = mining station
 	var/mineral_multiply_coefficient = 1.0 // default
 	sharp = 1
 
-	var/excavation_amount = 100
+	var/excavation_amount = 150
 
 /obj/item/weapon/pickaxe/silver
 	name = "silver pickaxe"

@@ -796,12 +796,6 @@
 		/obj/item/weapon/reagent_containers/food/snacks/grown/plastellium = list("plasticide" = 5),
 		/obj/item/weapon/reagent_containers/food/snacks/egg = list("egg" = -5),
 
-
-		//archaeology,
-		/obj/item/weapon/rocksliver = list("ground_rock" = 50),
-
-
-
 		//All types that you can put into the grinder to transfer the reagents to the beaker. !Put all recipes above this!,
 		/obj/item/weapon/reagent_containers/pill = list(),
 		/obj/item/weapon/reagent_containers/food = list(),
@@ -1196,20 +1190,6 @@
 		if (space <= O.reagents.total_volume)
 			break
 		O.reagents.trans_to(beaker, O.reagents.total_volume)
-		remove_object(O)
-
-	//xenoarch
-	for(var/obj/item/weapon/rocksliver/O in holdingitems)
-		if (beaker.reagents.total_volume >= beaker.reagents.maximum_volume)
-			break
-		var/allowed = get_allowed_by_id(O)
-		for (var/r_id in allowed)
-			var/space = beaker.reagents.maximum_volume - beaker.reagents.total_volume
-			var/amount = allowed[r_id]
-			beaker.reagents.add_reagent(r_id,min(amount, space), O.geological_data)
-
-			if (beaker.reagents.total_volume >= beaker.reagents.maximum_volume)
-				break
 		remove_object(O)
 
 	//Everything else - Transfers reagents from it into beaker

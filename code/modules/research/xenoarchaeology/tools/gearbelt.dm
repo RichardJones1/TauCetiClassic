@@ -5,8 +5,6 @@
 	icon_state = "gearbelt"
 	item_state = "gearbelt"
 	can_hold = list(
-		/obj/item/weapon/storage/box/samplebags,
-		/obj/item/device/core_sampler,
 		/obj/item/device/beacon_locator,
 		/obj/item/device/radio/beacon,
 		/obj/item/device/gps,

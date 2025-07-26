@@ -92,19 +92,19 @@ SUBSYSTEM_DEF(xenoarch)
 			archeo_turf.finds = list()
 
 			if(prob(50))
-				archeo_turf.finds += new /datum/find(digsite, rand(5,95))
+				archeo_turf.finds += new /datum/find(digsite, rand(7,74)) // rand(7,74) is how deep the find is. it gets multiplied by 2 so from 14 to 148
 				digsite_spawning_turfs += archeo_turf
 			else if(prob(75))
-				archeo_turf.finds += new /datum/find(digsite, rand(5,45))
-				archeo_turf.finds += new /datum/find(digsite, rand(55,95))
+				archeo_turf.finds += new /datum/find(digsite, rand(7,33))
+				archeo_turf.finds += new /datum/find(digsite, rand(34,74))
 			else
-				archeo_turf.finds += new /datum/find(digsite, rand(5,30))
-				archeo_turf.finds += new /datum/find(digsite, rand(35,75))
-				archeo_turf.finds += new /datum/find(digsite, rand(75,95))
+				archeo_turf.finds += new /datum/find(digsite, rand(7,22))
+				archeo_turf.finds += new /datum/find(digsite, rand(23,44))
+				archeo_turf.finds += new /datum/find(digsite, rand(45,74))
 
 			// Sometimes a find will be close enough to the surface to show
 			var/datum/find/F = archeo_turf.finds[1]
-			if(F.excavation_required <= F.view_range)
+			if(F.excavation_required <= FIND_VIEW_RANGE)
 				archeo_turf.archaeo_overlay = "overlay_archaeo[rand(1,3)]"
 				archeo_turf.add_overlay(archeo_turf.archaeo_overlay)
 

@@ -20,7 +20,6 @@
 	var/depth = 0
 	var/clearance = 0
 	var/record_index = 1
-	var/dissonance_spread = 1
 	var/material = "unknown"
 
 /obj/item/device/depth_scanner/proc/scan_atom(mob/user, atom/A)
@@ -39,8 +38,8 @@
 			//find the first artifact and store it
 			if(M.finds.len)
 				var/datum/find/F = M.finds[1]
-				D.depth = F.excavation_required * 2		//0-100% and 0-200cm
-				D.clearance = F.clearance_range * 2
+				D.depth = F.excavation_required
+				D.clearance = F.clearance_range
 				D.material = get_responsive_reagent(F.find_type)
 
 			positive_locations.Add(D)
@@ -65,7 +64,6 @@
 		dat += "Coords: [current.coords]<br>"
 		dat += "Anomaly depth: [current.depth] cm<br>"
 		dat += "Clearance above anomaly depth: [current.clearance] cm<br>"
-		dat += "Dissonance spread: [current.dissonance_spread]<br>"
 		var/index = responsive_carriers.Find(current.material)
 		if(index > 0 && index <= finds_as_strings.len)
 			dat += "Anomaly material: [finds_as_strings[index]]<br>"

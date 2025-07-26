@@ -1,23 +1,44 @@
-//original code and idea from Alfie275 (luna era) and ISaidNo (goonservers) - with thanks
+/datum/find                                 // INFO about the item we will be getting:
+	var/find_type = /obj/item               // type // In case they need to be overwritten:
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Xenoarchaeological finds
+	var/find_name = "ancient find"                  // name
+	var/find_desc = "Some old relic of the past"    // description
+	var/find_icon = FALSE                           // icon
+	var/find_icon_state = ""                        // icon_state
 
-/datum/find
-	var/find_type = 0				//random according to the digsite type
-	var/excavation_required = 0		//random 5-95%
-	var/view_range = 20				//how close excavation has to come to show an overlay on the turf
-	var/clearance_range = 3			//how close excavation has to come to extract the item
-									//if excavation hits var/excavation_required exactly, it's contained find is extracted cleanly without the ore
-	var/prob_delicate = 90			//probability it requires an active suspension field to not insta-crumble
-	var/dissonance_spread = 1		//proportion of the tile that is affected by this find
-									//used in conjunction with analysis machines to determine correct suspension field type
+	var/find_prob = FIND_PROBABILITY_ZERO           // probability of getting it
+	var/find_origin = list(ORIGIN_HUMAN)            // finds with the same origin are usually found near each other
+
+	var/excavation_required = 0		                // how deep its located in the mine turf - from 0 to 150
+	var/clearance_range = 4			                // how close excavation has to come to extract the item (with one take)
 
 /datum/find/New(digsite, exc_req)
-	excavation_required = exc_req
-	find_type = get_random_find_type(digsite)
-	clearance_range = rand(2,6)
-	dissonance_spread = rand(1500,2500) / 100
+	excavation_required = exc_req * 2
+	clearance_range = pick(4, 6, 8, 10, 12)
+
+// bowl that replenishes itself endlessly
+/datum/find/bowl
+	find_type = /obj/item/weapon/reagent_containers/glass/replenishing
+	find_desc = "You feel as if [src] is slowly filling up..."
+	find_origin = list(ORIGIN_WIZARD, ORIGIN_MARTIAN, ORIGIN_ELDRITCH, ORIGIN_PRECURSOR)
+	find_icon = 'icons/obj/xenoarchaeology/finds.dmi'
+	find_icon_state = "bowl"
+
+/datum/find/bowl/New()
+	. = ..()
+
+/obj/item/weapon/reagent_containers/glass/replenishing
+	var/spawning_id
+
+/obj/item/weapon/reagent_containers/glass/replenishing/atom_init()
+	. = ..()
+	START_PROCESSING(SSobj, src)
+	spawning_id = pick("blood", "holywater", "unholywater", "lube", "stoxin", "beer", "glycerol", "fuel", "cleaner")
+
+/obj/item/weapon/reagent_containers/glass/replenishing/process()
+	reagents.add_reagent(spawning_id, 0.3)
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Strange rocks
@@ -69,12 +90,6 @@
 				else
 					visible_message("<span class='info'>A few sparks fly off [src], but nothing else happens.</span>")
 					WT.use(1)
-		return
-
-	if(istype(I, /obj/item/device/core_sampler))
-		var/obj/item/device/core_sampler/S = I
-		S.sample_item(src, user)
-		user.SetNextMove(CLICK_CD_INTERACT)
 		return
 
 	. = ..()

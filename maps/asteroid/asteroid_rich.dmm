@@ -8398,10 +8398,6 @@
 	pixel_x = 4;
 	pixel_y = 5
 	},
-/obj/item/weapon/storage/box/samplebags{
-	pixel_x = 3;
-	pixel_y = -3
-	},
 /obj/structure/cable{
 	d2 = 8;
 	icon_state = "0-8"

@@ -120,7 +120,7 @@
 	icon_state = "pick_hand"
 	toolspeed = 0.6
 	desc = "A smaller, more precise version of the pickaxe (30 centimetre excavation depth)."
-	excavation_amount = 15
+	excavation_amount = 30
 	usesound = 'sound/items/Crowbar.ogg'
 	drill_verb = "clearing"
 	w_class = SIZE_SMALL

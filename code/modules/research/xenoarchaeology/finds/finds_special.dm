@@ -1,15 +1,4 @@
 
-// endless reagents!
-/obj/item/weapon/reagent_containers/glass/replenishing
-	var/spawning_id
-
-/obj/item/weapon/reagent_containers/glass/replenishing/atom_init()
-	. = ..()
-	START_PROCESSING(SSobj, src)
-	spawning_id = pick("blood", "holywater", "unholywater", "lube", "stoxin", "beer", "glycerol", "fuel", "cleaner")
-
-/obj/item/weapon/reagent_containers/glass/replenishing/process()
-	reagents.add_reagent(spawning_id, 0.3)
 
 // a talking gas mask!
 /obj/item/clothing/mask/gas/poltergeist

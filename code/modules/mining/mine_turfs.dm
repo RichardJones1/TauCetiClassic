@@ -2,6 +2,7 @@
 #define MAX_TUNNEL_LENGTH 60
 #define DISTANCE_BEETWEEN_MOSTERS 16
 #define CRATE_DROP_CHANCE 0.5 // 1 in 200
+#define MAX_EXCAVATION_AMOUNT 150
 
 /**********************Mineral deposits**************************/
 /turf/simulated/mineral
@@ -17,30 +18,29 @@
 	temperature = TCMB
 
 	explosive_resistance = 1
-
-	hud_possible = list(MINE_MINERAL_HUD, MINE_ARTIFACT_HUD)
-	var/mineral/mineral
-	var/mined_ore = 0
-	basetype = /turf/simulated/floor/plating/airless/asteroid
-	var/datum/geosample/geologic_data
-	var/excavation_level = 0
-	var/list/finds
-	var/next_rock = 0
-	var/archaeo_overlay = ""
-	var/excav_overlay = ""
-	var/obj/item/weapon/last_find
-	var/datum/artifact_find/artifact_find
-
-	var/ore_amount = 0
-
 	has_resources = TRUE
 
+	basetype = /turf/simulated/floor/plating/airless/asteroid
+	hud_possible = list(MINE_MINERAL_HUD, MINE_ARTIFACT_HUD)
+
+	var/mineral/mineral
+	var/mined_ore = 0
+	var/ore_amount = 0
 	var/global/list/rock_side_overlays
+
+	// xenoarchaeology stuff
+	var/archaeo_overlay = ""
+	var/list/finds
+	var/obj/item/weapon/last_find
+	var/datum/artifact_find/artifact_find
+	var/excavation_level = 0
+	var/next_rock = 0
+	var/excav_overlay = ""
+
 
 /turf/simulated/mineral/atom_init(mapload)
 	. = ..()
 	icon_state = "rock"
-	geologic_data = new(src)
 	if(!rock_side_overlays)
 		rock_side_overlays = list(null, null, null, null, null, null, null, null, null) // 9 nulls to create dir -> appearance list
 		for(var/direction_to_check in cardinal)
@@ -167,12 +167,6 @@
 	if (user.is_busy(src))
 		return
 
-	if (istype(W, /obj/item/device/core_sampler))
-		geologic_data.UpdateNearbyArtifactInfo(src)
-		var/obj/item/device/core_sampler/C = W
-		C.sample_item(src, user)
-		return
-
 	if (istype(W, /obj/item/device/depth_scanner))
 		var/obj/item/device/depth_scanner/C = W
 		C.scan_atom(user, src)
@@ -257,7 +251,7 @@
 					//just pull the surrounding rock out
 					excavate_find(0, F)
 
-			if( excavation_level + P.excavation_amount >= 100 )
+			if( excavation_level + P.excavation_amount >= MAX_EXCAVATION_AMOUNT)
 				// if players have been excavating this turf, leave some rocky debris behind
 				var/obj/structure/boulder/B
 				if(artifact_find)
@@ -266,7 +260,7 @@
 						B = new(src)
 						if(artifact_find)
 							B.artifact_find = artifact_find
-							B.setup_artifact()
+							B.setup_excavation_game()
 					else
 						artifact_debris(1)
 				else if(prob(15))
@@ -284,35 +278,33 @@
 			// archaeo overlays
 			if(!archaeo_overlay && finds && finds.len)
 				var/datum/find/F = finds[1]
-				if(F.excavation_required <= excavation_level + F.view_range)
+				if(F.excavation_required <= excavation_level + FIND_VIEW_RANGE)
 					archaeo_overlay = "overlay_archaeo[rand(1,3)]"
 					add_overlay(archaeo_overlay)
 
 			// there's got to be a better way to do this
-			var/update_excav_overlay = 0
-			if(excavation_level >= 75)
-				if(excavation_level - P.excavation_amount < 75)
-					update_excav_overlay = 1
-			else if(excavation_level >= 50)
-				if(excavation_level - P.excavation_amount < 50)
-					update_excav_overlay = 1
-			else if(excavation_level >= 25)
-				if(excavation_level - P.excavation_amount < 25)
-					update_excav_overlay = 1
+			var/update_excav_overlay = FALSE
+			if(excavation_level >= round(MAX_EXCAVATION_AMOUNT * 0.75)) // at 75%
+				if(excavation_level - P.excavation_amount < round(MAX_EXCAVATION_AMOUNT * 0.75))
+					update_excav_overlay = TRUE
+			else if(excavation_level >= round(MAX_EXCAVATION_AMOUNT * 0.5)) // at 50%
+				if(excavation_level - P.excavation_amount < round(MAX_EXCAVATION_AMOUNT * 0.5))
+					update_excav_overlay = TRUE
+			else if(excavation_level >= round(MAX_EXCAVATION_AMOUNT * 0.25))
+				if(excavation_level - P.excavation_amount < round(MAX_EXCAVATION_AMOUNT * 0.25)) // at 25%
+					update_excav_overlay = TRUE
 
 			// update overlays displaying excavation level
 			if( !(excav_overlay && excavation_level > 0) || update_excav_overlay )
-				var/excav_quadrant = round(excavation_level / 25) + 1
+				var/excav_quadrant = round(excavation_level / (MAX_EXCAVATION_AMOUNT / 4)) + 1
 				excav_overlay = "overlay_excv[excav_quadrant]_[rand(1,3)]"
 				add_overlay(excav_overlay)
 
 			// drop some rocks
-			next_rock += P.excavation_amount * 10
-			while(next_rock > 100)
-				next_rock -= 100
+			next_rock += P.excavation_amount * 5
+			while(next_rock > MAX_EXCAVATION_AMOUNT)
+				next_rock -= MAX_EXCAVATION_AMOUNT
 				var/obj/item/weapon/ore/O = new(src)
-				geologic_data.UpdateNearbyArtifactInfo(src)
-				O.geologic_data = geologic_data
 
 	else
 		return attack_hand(user)
@@ -323,9 +315,6 @@
 		return
 
 	var/obj/item/weapon/ore/O = new mineral.ore (src)
-	if(istype(O))
-		geologic_data.UpdateNearbyArtifactInfo(src)
-		O.geologic_data = geologic_data
 	return O
 
 
@@ -379,8 +368,6 @@
 		W = new /obj/item/weapon/archaeological_find(src, F.find_type)
 	else
 		W = new /obj/item/weapon/ore/strangerock(src, F.find_type)
-		geologic_data.UpdateNearbyArtifactInfo(src)
-		W:geologic_data = geologic_data
 
 	//some find types delete the /obj/item/weapon/archaeological_find and replace it with something else, this handles when that happens
 	//yuck
@@ -391,7 +378,7 @@
 		display_name = W.name
 
 	//many finds are ancient and thus very delicate - luckily there is a specialised energy suspension field which protects them when they're being extracted
-	if(prob(F.prob_delicate))
+	if(prob(100))
 		var/obj/effect/suspension_field/S = locate() in src
 		if(!S || S.field_type != get_responsive_reagent(F.find_type))
 			if(W)
@@ -735,3 +722,4 @@
 #undef MAX_TUNNEL_LENGTH
 #undef DISTANCE_BEETWEEN_MOSTERS
 #undef CRATE_DROP_CHANCE
+#undef MAX_EXCAVATION_AMOUNT 150

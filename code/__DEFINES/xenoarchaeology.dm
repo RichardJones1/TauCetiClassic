@@ -1,3 +1,22 @@
+// Probability of getting a specific find:
+#define FIND_PROBABILITY_ZERO 0 // For items that should not appear
+#define FIND_PROBABILITY_MYTHICAL 10
+#define FIND_PROBABILITY_VERYRARE 25
+#define FIND_PROBABILITY_RARE 50
+#define FIND_PROBABILITY_UNCOMMON 75
+#define FIND_PROBABILITY_COMMON 100 // Normal chance
+#define FIND_PROBABILITY_EXTREME 150
+
+#define FIND_VIEW_RANGE 20 // how close excavation has to come to show a xenoarch overlay on the mine turf
+
+// Origin (who created this relic). In order from the most recent to the oldest
+#define ORIGIN_HUMAN "human"        // Mostly used for finds like pip-boy etc
+#define ORIGIN_WIZARD "wizard"      // Complicated machines, made to look archaic as to give the impression that it is magical. However, this magic has been mostly debunked by Nanotrasen researchers.
+#define ORIGIN_MARTIAN "martian"    // Flesh-based machines, originated initally from Mars
+#define ORIGIN_SILICON "silicon"    // A race of silicon-based sentients, they are usually tuned to be silicon based
+#define ORIGIN_ELDRITCH "eldritch"  // An unknown race, possibly not even from this dimension. Inspired by Lovecraftian horrors. Experiment with your peril.
+#define ORIGIN_PRECURSOR "precursor"// The oldest artifacts, made by a race that might have created all of life itself. Not much is known about them.
+
 ///artifact energy release method
 #define ARTIFACT_EFFECT_TOUCH 0
 #define ARTIFACT_EFFECT_AURA 1
