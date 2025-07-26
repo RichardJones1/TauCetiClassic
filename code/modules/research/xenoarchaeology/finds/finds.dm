@@ -5,6 +5,7 @@
 	var/find_desc = "Some old relic of the past"    // description
 	var/find_icon = FALSE                           // icon
 	var/find_icon_state = ""                        // icon_state
+	var/find_item_state_world = ""                        // item_state_world
 
 	var/find_prob = FIND_PROBABILITY_ZERO           // probability of getting it
 	var/find_origin = list(ORIGIN_HUMAN)            // finds with the same origin are usually found near each other
@@ -16,16 +17,60 @@
 	excavation_required = exc_req * 2
 	clearance_range = pick(4, 6, 8, 10, 12)
 
-// bowl that replenishes itself endlessly
+/datum/find/proc/spawn_find(atom/loc)
+	if(!loc)
+		return
+	var/obj/item/new_find = new find_type
+
+	// lets stylize our find
+	stylize_find(new_find)
+
+	// give it to the player
+	new_find.loc = loc
+
+/datum/find/proc/stylize_find(obj/item/new_find)
+	if(find_name)
+		new_find.name = find_name
+	if(find_desc)
+		new_find.desc = find_desc
+	if(find_icon)
+		new_find.icon = find_icon
+	if(find_icon_state)
+		new_find.icon_state = find_icon_state
+	if(find_item_state_world)
+		new_find.item_state_inventory = new_find.icon_state
+		new_find.item_state_world = find_item_state_world
+		new_find.update_world_icon()
+
+//////////////////////////////////////////
+// Bowl that replenishes itself endlessly
 /datum/find/bowl
 	find_type = /obj/item/weapon/reagent_containers/glass/replenishing
+	find_name = "ancient bowl"
 	find_desc = "You feel as if [src] is slowly filling up..."
-	find_origin = list(ORIGIN_WIZARD, ORIGIN_MARTIAN, ORIGIN_ELDRITCH, ORIGIN_PRECURSOR)
 	find_icon = 'icons/obj/xenoarchaeology/finds.dmi'
 	find_icon_state = "bowl"
 
-/datum/find/bowl/New()
+	find_origin = list(ORIGIN_WIZARD, ORIGIN_MARTIAN, ORIGIN_ELDRITCH, ORIGIN_PRECURSOR)
+
+/datum/find/bowl/stylize_find(obj/item/new_find)
 	. = ..()
+	if(istype(new_find, /obj/item/weapon/reagent_containers/glass/replenishing))
+		var/obj/item/weapon/reagent_containers/glass/replenishing/B = new_find
+		switch(find_origin)
+			if(ORIGIN_WIZARD)
+				find_icon_state = "bowl_wizard"
+				B.spawning_id = pick("lube", "beer", "cleaner", "glycerol", "hyperzine", "holywater", "unholywater")
+			if(ORIGIN_MARTIAN)
+				find_icon_state = "bowl_wizard"
+				B.spawning_id = pick("lube", "beer", "cleaner", "glycerol", "hyperzine")
+			if(ORIGIN_ELDRITCH)
+				find_icon_state = "bowl_wizard"
+				B.spawning_id = pick("blood", "beer", "cleaner", "glycerol", "hyperzine")
+			if(ORIGIN_PRECURSOR)
+				find_icon_state = "bowl_wizard"
+				B.spawning_id = pick("lube", "beer", "cleaner", "glycerol", "hyperzine")
+
 
 /obj/item/weapon/reagent_containers/glass/replenishing
 	var/spawning_id
@@ -36,7 +81,8 @@
 	spawning_id = pick("blood", "holywater", "unholywater", "lube", "stoxin", "beer", "glycerol", "fuel", "cleaner")
 
 /obj/item/weapon/reagent_containers/glass/replenishing/process()
-	reagents.add_reagent(spawning_id, 0.3)
+	if(spawning_id)
+		reagents.add_reagent(spawning_id, 0.3)
 
 
 
