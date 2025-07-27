@@ -129,3 +129,56 @@
 		var/obj/mecha/M = AM
 		if(istype(M.selected, /obj/item/mecha_parts/mecha_equipment/drill))
 			M.selected.action(src)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Strange rocks
+// Can give a find. Has a chance of giving nothing
+
+/obj/item/weapon/ore/strangerock
+	name = "Strange rock"
+	desc = "Seems to have some unusal strata evident throughout it."
+	icon = 'icons/obj/xenoarchaeology/finds.dmi'
+	icon_state = "strange"
+	var/datum/find/find_inside
+	origin_tech = "materials=5"
+
+/obj/item/weapon/ore/strangerock/atom_init(mapload, find)
+	. = ..()
+	if(find)
+		find_inside = find
+
+/obj/item/weapon/ore/strangerock/attackby(obj/item/I, mob/user, params)
+	if(istype(I, /obj/item/weapon/pickaxe/brush))
+		if(I.use_tool(src, user, 20, volume = 50))
+			reveal_find("is brushed", 20) // 20% to get the item
+			qdel(src)
+			return
+
+	if(iswelding(I))
+		var/obj/item/weapon/weldingtool/WT = I
+		user.SetNextMove(CLICK_CD_INTERACT)
+		if(WT.use_tool(src, user, 20, volume = 50))
+			if(WT.isOn())
+				if(WT.get_fuel() >= 4)
+					reveal_find("burns", 35) // 35% to get the item
+					qdel(src)
+					WT.use(4)
+				else
+					visible_message("<span class='info'>A few sparks fly off [src], but nothing else happens.</span>")
+					WT.use(1)
+		return
+
+	. = ..()
+	if(prob(33))
+		visible_message("<span class='warning'>[src] crumbles away, leaving some dust and gravel behind.</span>")
+		qdel(src)
+
+/obj/item/weapon/ore/strangerock/proc/reveal_find(tool_verb, prob_chance)
+	if(!find_inside)
+		visible_message("<span class='notice'>\The [src] reveals nothing!</span>")
+		return
+	if(prob(prob_chance))
+		find_inside.spawn_find(get_turf(src))
+		visible_message("<span class='notice'>\The [src] [tool_verb] away revealing something!</span>")
+	else
+		visible_message("<span class='warning'>\The [src] [tool_verb] away, but something that was inside crumbles into dust!</span>")

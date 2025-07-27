@@ -40,7 +40,6 @@
 				var/datum/find/F = M.finds[1]
 				D.depth = F.excavation_required
 				D.clearance = F.clearance_range
-				D.material = get_responsive_reagent(F.find_type)
 
 			positive_locations.Add(D)
 
@@ -64,11 +63,6 @@
 		dat += "Coords: [current.coords]<br>"
 		dat += "Anomaly depth: [current.depth] cm<br>"
 		dat += "Clearance above anomaly depth: [current.clearance] cm<br>"
-		var/index = responsive_carriers.Find(current.material)
-		if(index > 0 && index <= finds_as_strings.len)
-			dat += "Anomaly material: [finds_as_strings[index]]<br>"
-		else
-			dat += "Anomaly material: Unknown<br>"
 		dat += "<A href='byond://?src=\ref[src];clear=[current.record_index]'>clear entry</a><br>"
 	else
 		dat += "Select an entry from the list<br>"

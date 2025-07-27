@@ -9,8 +9,8 @@ SUBSYSTEM_DEF(xenoarch)
 	var/const/XENOARCH_SPAWN_CHANCE  = 10 // %
 	var/const/DIGSITESIZE_LOWER      = 5
 	var/const/DIGSITESIZE_UPPER      = 12
-	var/const/ARTIFACTSPAWNNUM_LOWER = 6
-	var/const/ARTIFACTSPAWNNUM_UPPER = 12
+	var/const/ARTIFACTSPAWNNUM_LOWER = 10
+	var/const/ARTIFACTSPAWNNUM_UPPER = 16
 
 	var/list/all_animal_genesequences = list()
 	var/list/all_plant_genesequences  = list()
@@ -86,21 +86,20 @@ SUBSYSTEM_DEF(xenoarch)
 		var/turf/simulated/mineral/archeo_turf = turfs_to_process[turfs_to_process.len]
 		turfs_to_process.len--
 
-		var/digsite = get_random_digsite_type()
+		var/digsite = get_random_digsite_origin()
 
 		if(isnull(archeo_turf.finds))
 			archeo_turf.finds = list()
 
 			if(prob(50))
-				archeo_turf.finds += new /datum/find(digsite, rand(7,74)) // rand(7,74) is how deep the find is. it gets multiplied by 2 so from 14 to 148
-				digsite_spawning_turfs += archeo_turf
+				archeo_turf.finds += get_random_find(digsite, rand(7,74)) // rand(7,74) is how deep the find is. it gets multiplied by 2 so from 14 to 148
 			else if(prob(75))
-				archeo_turf.finds += new /datum/find(digsite, rand(7,33))
-				archeo_turf.finds += new /datum/find(digsite, rand(34,74))
+				archeo_turf.finds += get_random_find(digsite, rand(7,33))
+				archeo_turf.finds += get_random_find(digsite, rand(34,74))
 			else
-				archeo_turf.finds += new /datum/find(digsite, rand(7,22))
-				archeo_turf.finds += new /datum/find(digsite, rand(23,44))
-				archeo_turf.finds += new /datum/find(digsite, rand(45,74))
+				archeo_turf.finds += get_random_find(digsite, rand(7,22))
+				archeo_turf.finds += get_random_find(digsite, rand(23,44))
+				archeo_turf.finds += get_random_find(digsite, rand(45,74))
 
 			// Sometimes a find will be close enough to the surface to show
 			var/datum/find/F = archeo_turf.finds[1]
@@ -164,3 +163,18 @@ SUBSYSTEM_DEF(xenoarch)
 
 /datum/controller/subsystem/xenoarch/Recover()
 	flags |= SS_NO_INIT
+
+/datum/controller/subsystem/xenoarch/proc/get_random_digsite_origin()
+	var/digsite_origin = pick(
+	100;ORIGIN_HUMAN,
+	100;ORIGIN_WIZARD,
+	75;ORIGIN_MARTIAN,
+	75;ORIGIN_SILICON,
+	75;ORIGIN_ELDRITCH,
+	50;ORIGIN_PRECURSOR
+	)
+	return digsite_origin
+
+/datum/controller/subsystem/xenoarch/proc/get_random_find(origin, exc_req)
+	var/datum/find/F = new /datum/find/bowl/wizard(exc_req)
+	return F

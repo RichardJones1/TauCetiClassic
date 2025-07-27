@@ -31,7 +31,6 @@
 	// xenoarchaeology stuff
 	var/archaeo_overlay = ""
 	var/list/finds
-	var/obj/item/weapon/last_find
 	var/datum/artifact_find/artifact_find
 	var/excavation_level = 0
 	var/next_rock = 0
@@ -172,13 +171,6 @@
 		C.scan_atom(user, src)
 		return
 
-	if (istype(W, /obj/item/device/measuring_tape))
-		var/obj/item/device/measuring_tape/P = W
-		user.visible_message("<span class='notice'>[user] extends [P] towards [src].</span>","<span class='notice'>You extend [P] towards [src].</span>")
-		if(W.use_tool(src, user, 2.5 SECONDS, volume = 50))
-			to_chat(user, "<span class='notice'>[bicon(P)] [src] has been excavated to a depth of [2*excavation_level]cm.</span>")
-		return
-
 	if (istype(W, /obj/item/weapon/sledgehammer))
 		var/obj/item/weapon/sledgehammer/S = W
 		if(HAS_TRAIT(S, TRAIT_DOUBLE_WIELDED))
@@ -205,24 +197,7 @@
 					to_chat(user, "<span class='danger'>No power!</span>")
 					return
 
-		// handle any archaeological finds we might uncover
-		var/fail_message
-		if(length(finds))
-			var/datum/find/F = finds[1]
-			if(excavation_level + P.excavation_amount > F.excavation_required)
-				// Chance to destroy / extract any finds here
-				fail_message = ", <b>[pick("there is a crunching noise","[W] collides with some different rock","part of the rock face crumbles away","something breaks under [W]")]</b>"
-
-		to_chat(user, "<span class='warning'>You start [P.drill_verb][fail_message ? fail_message : ""].</span>")
-
-		if(fail_message && prob(90))
-			if(prob(25))
-				excavate_find(5, finds[1])
-			else if(prob(50))
-				finds.Remove(finds[1])
-				set_mine_hud()
-				if(prob(50))
-					artifact_debris()
+		to_chat(user, "<span class='warning'>You start [P.drill_verb].</span>")
 
 		if(P.use_tool(src, user, 2 SECONDS, volume = 100))
 			if(ishuman(user))
@@ -238,24 +213,40 @@
 				return
 
 			if(length(finds))
-				var/datum/find/F = finds[1]
-				if(round(excavation_level + P.excavation_amount) == F.excavation_required)
-					//Chance to extract any items here perfectly, otherwise just pull them out along with the rock surrounding them
-					if(excavation_level + P.excavation_amount > F.excavation_required)
-						//if you can get slightly over, perfect extraction
-						excavate_find(100, F)
-					else
-						excavate_find(80, F)
-
-				else if(excavation_level + P.excavation_amount > F.excavation_required - F.clearance_range)
-					//just pull the surrounding rock out
-					excavate_find(0, F)
+				/// heres an example:
+				// we have a find with excavation_required = 100, clearance_range = 8
+				// means we should get to 92, then use our 8-pick.
+				//
+				// if we go 0-92, nothing happens
+				// if we go 92-100, 30% to 50% to extract
+				// if we go to 92, then to 100 in one brush, 100% to extract
+				// if we go over 100, 0% to extract
+				//
+				for(var/datum/find/F in finds)
+					// went under or right into excavation_required, a chance to dig it up
+					if(excavation_level + P.excavation_amount <= F.excavation_required)
+						// previously got into safe position ( = excavation_required - clearance_range)
+						if(excavation_level == F.excavation_required - F.clearance_range)
+							// we chose the right pick! perfect extraction!
+							if(excavation_level + P.excavation_amount == F.excavation_required)
+								excavate_find(100, F, user)
+							// chose the wrong pick. still has a 50% chance of extraction
+							else if(excavation_level + P.excavation_amount < F.excavation_required)
+								excavate_find(50, F, user)
+							else // went over the find, fail 100%
+								excavate_find(0, F, user)
+						// didnt get into the safe possition previously, but got into clearance_range. 30% chance
+						else if(excavation_level + P.excavation_amount > F.excavation_required - F.clearance_range)
+							excavate_find(30, F, user)
+					// went over the find, fail 100%
+					else if(excavation_level + P.excavation_amount > F.excavation_required)
+						excavate_find(0, F, user)
 
 			if( excavation_level + P.excavation_amount >= MAX_EXCAVATION_AMOUNT)
 				// if players have been excavating this turf, leave some rocky debris behind
 				var/obj/structure/boulder/B
 				if(artifact_find)
-					if( excavation_level > 0 || prob(15) )
+					if(excavation_level > 0 || prob(15))
 						// boulder with an artifact inside
 						B = new(src)
 						if(artifact_find)
@@ -304,7 +295,7 @@
 			next_rock += P.excavation_amount * 5
 			while(next_rock > MAX_EXCAVATION_AMOUNT)
 				next_rock -= MAX_EXCAVATION_AMOUNT
-				var/obj/item/weapon/ore/O = new(src)
+				new /obj/item/weapon/ore(src)
 
 	else
 		return attack_hand(user)
@@ -322,32 +313,9 @@
 	playsound(src, 'sound/effects/rockfall.ogg', VOL_EFFECTS_MASTER)
 	// var/destroyed = 0 //used for breaking strange rocks
 	if (mineral && ore_amount)
-
 		// if the turf has already been excavated, some of it's ore has been removed
 		for (var/i = 1 to round((ore_amount - mined_ore) * mineral_drop_coefficient, 1))
 			DropMineral()
-
-	// destroyed artifacts have weird, unpleasant effects
-	// make sure to destroy them before changing the turf though
-	if(artifact_find && artifact_fail)
-		var/pain = 0
-		if(prob(50))
-			pain = 1
-		for(var/mob/living/M in range(src, 200))
-			to_chat(M, "<span class='danger'>[pick("A high pitched [pick("keening","wailing","whistle")]","A rumbling noise like [pick("thunder","heavy machinery")]")] somehow penetrates your mind before fading away!</span>")
-			if(pain)
-				if(prob(50))
-					M.adjustBruteLoss(5)
-			else
-				M.flash_eyes()
-				if(prob(50))
-					M.Stun(5)
-			irradiate_one_mob(M, 25)
-		for(var/obj/item/device/analyzer/counter as anything in global.geiger_items_list)
-			var/distance_rad_signal = get_dist(counter, src)
-			var/rads = 25 * sqrt(1 / (distance_rad_signal + 1))
-			counter.recieve_rad_signal(rads, distance_rad_signal)
-
 
 	var/datum/atom_hud/mine/mine = global.huds[DATA_HUD_MINER]
 	if(src in mine.hudatoms)
@@ -360,34 +328,24 @@
 		visible_message("<span class='notice'>An old dusty crate was buried within!</span>")
 		new /obj/structure/closet/crate/secure/loot(src)
 
-/turf/simulated/mineral/proc/excavate_find(prob_clean = 0, datum/find/F)
-	//with skill and luck, players can cleanly extract finds
-	//otherwise, they come out inside a chunk of rock
-	var/obj/item/weapon/W
-	if(prob_clean)
-		W = new /obj/item/weapon/archaeological_find(src, F.find_type)
+/turf/simulated/mineral/proc/excavate_find(prob_clean = 0, datum/find/F, mob/user)
+	// with skill and luck, players can cleanly extract finds
+	// otherwise, they come out inside a strange rock that can break apart
+	if(prob(prob_clean))
+		if(ishuman(user))
+			var/mob/living/carbon/human/H = user
+			F.spawn_find(src, H)
+		else
+			F.spawn_find(src)
+	else if(prob_clean > 0)
+		new /obj/item/weapon/ore/strangerock(src, F)
+		user.visible_message("<span class='notice'>[CASE(user, NOMINATIVE_CASE)] заканчивает раскопку. В породе виднеется камень странной формы...</span>",
+		"<span class='notice'>Вы заканчиваете раскопку. Извлечь ископаемое не получилось, но в породе виднеется камень странной формы...</span>")
 	else
-		W = new /obj/item/weapon/ore/strangerock(src, F.find_type)
-
-	//some find types delete the /obj/item/weapon/archaeological_find and replace it with something else, this handles when that happens
-	//yuck
-	var/display_name = "something"
-	if(!W)
-		W = last_find
-	if(W)
-		display_name = W.name
-
-	//many finds are ancient and thus very delicate - luckily there is a specialised energy suspension field which protects them when they're being extracted
-	if(prob(100))
-		var/obj/effect/suspension_field/S = locate() in src
-		if(!S || S.field_type != get_responsive_reagent(F.find_type))
-			if(W)
-				visible_message("<span class='danger'>[pick("[display_name] crumbles away into dust","[display_name] breaks apart")].</span>")
-				qdel(W)
-
+		visible_message("<span class='warning'>[pick("Что-то с хрустящим звуком ломается в породе...", "Часть породы обваливается, забирая с собой все хранившиеся в ней секреты...", "Что-то ломается внутри породы...")]</span>")
+		artifact_debris(0)
 	finds.Remove(F)
 	set_mine_hud()
-
 
 /turf/simulated/mineral/proc/artifact_debris(severity = 0)
 	//cael's patented random limited drop componentized loot system!
@@ -722,4 +680,4 @@
 #undef MAX_TUNNEL_LENGTH
 #undef DISTANCE_BEETWEEN_MOSTERS
 #undef CRATE_DROP_CHANCE
-#undef MAX_EXCAVATION_AMOUNT 150
+#undef MAX_EXCAVATION_AMOUNT

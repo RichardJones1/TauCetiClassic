@@ -17,11 +17,7 @@
 		/obj/item/weapon/fossil/skull/horned = 2
 		)
 	var/t = pickweight(l)
-	var/obj/item/weapon/W = new t(loc)
-	var/turf/simulated/mineral/T = get_turf(src)
-	if(istype(T))
-		T.last_find = W
-
+	new t(loc)
 	return INITIALIZE_HINT_QDEL
 
 /obj/item/weapon/fossil/bone

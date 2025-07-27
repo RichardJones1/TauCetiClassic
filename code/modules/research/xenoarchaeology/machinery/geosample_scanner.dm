@@ -44,7 +44,6 @@
 	var/rad_shield = 0
 	required_skills = list(/datum/skill/research = SKILL_LEVEL_TRAINED)
 
-
 /obj/machinery/radiocarbon_spectrometer/atom_init()
 	. = ..()
 	create_reagents(500)
@@ -61,6 +60,8 @@
 	coolant_reagents_purity["adminordrazine"] = 2
 
 /obj/machinery/radiocarbon_spectrometer/attackby(obj/I, mob/user)
+	return
+	/*
 	if(scanning)
 		to_chat(user, "<span class='warning'>You can't do that while [src] is scanning!</span>")
 	else
@@ -94,8 +95,11 @@
 			scanned_item = I
 		else
 			to_chat(user, "<span class='warning'>There is already something in [src].</span>")
+	*/
 
 /obj/machinery/radiocarbon_spectrometer/proc/update_coolant()
+	return
+	/*
 	var/total_purity = 0
 	fresh_coolant = 0
 	coolant_purity = 0
@@ -113,9 +117,11 @@
 		num_reagent_types += 1
 	if(total_purity && fresh_coolant)
 		coolant_purity = total_purity / fresh_coolant
+	*/
 
 /obj/machinery/radiocarbon_spectrometer/ui_interact(mob/user, ui_key = "main", datum/nanoui/ui = null)
-
+	return
+	/*
 	if(user.stat != CONSCIOUS && !isobserver(user))
 		return
 	// this is the data which will be sent to the ui
@@ -156,8 +162,11 @@
 		ui.open()
 		// auto update every Master Controller tick
 		ui.set_auto_update(1)
+	*/
 
 /obj/machinery/radiocarbon_spectrometer/process()
+	return
+	/*
 	if(scanning)
 		icon_state = "spectrometer_processing"
 		if(!scanned_item || scanned_item.loc != src)
@@ -242,8 +251,11 @@
 		if(prob(0.75))
 			visible_message("<span class='notice'>[bicon(src)] [src] [pick("plinks", "hisses")][pick(" quietly", " softly", " sadly", " plaintively")].</span>", 2)
 	last_process_worldtime = world.time
+	*/
 
 /obj/machinery/radiocarbon_spectrometer/proc/stop_scanning()
+	return
+	/*
 	icon_state = "spectrometer"
 	scanning = 0
 	scanner_rpm_dir = 1
@@ -256,9 +268,11 @@
 	t_left_radspike = 0
 	if(used_coolant)
 		reagents.remove_any(used_coolant)
-		used_coolant = 0
+		used_coolant = 0*/
 
 /obj/machinery/radiocarbon_spectrometer/proc/complete_scan()
+	return
+	/*
 	visible_message("<span class='notice'>[bicon(src)] [src] makes an insistent chime.</span>", 2)
 
 	if(scanned_item)
@@ -283,12 +297,12 @@
 				if(O.geological_data)
 					G = O.geological_data
 
-			if(/obj/item/weapon/archaeological_find)
-				data = " - Mundane object (archaic xenos origins)<br>"
+			//if(/obj/item/weapon/archaeological_find)
+				//data = " - Mundane object (archaic xenos origins)<br>"
 
-				var/obj/item/weapon/archaeological_find/A = scanned_item
-				if(A.GetComponent(/datum/component/talking_atom))
-					data = " - Exhibits properties consistent with sonic reproduction and audio capture technologies.<br>"
+				//var/obj/item/weapon/archaeological_find/A = scanned_item
+				//if(A.GetComponent(/datum/component/talking_atom))
+					//data = " - Exhibits properties consistent with sonic reproduction and audio capture technologies.<br>"
 
 		var/anom_found = 0
 		if(G)
@@ -321,12 +335,13 @@
 		P.loc = src.loc
 
 		scanned_item.loc = src.loc
-		scanned_item = null
+		scanned_item = null*/
 
 /obj/machinery/radiocarbon_spectrometer/Topic(href, href_list)
 	. = ..()
 	if(!.)
 		return
+	/*
 
 	if(href_list["scanItem"])
 		if(scanning)
@@ -359,3 +374,4 @@
 		if(scanned_item)
 			scanned_item.loc = src.loc
 			scanned_item = null
+	*/

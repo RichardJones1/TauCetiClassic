@@ -5,19 +5,20 @@
 	var/find_desc = "Some old relic of the past"    // description
 	var/find_icon = FALSE                           // icon
 	var/find_icon_state = ""                        // icon_state
-	var/find_item_state_world = ""                        // item_state_world
+	var/find_item_state_world = ""                  // item_state_world
+	var/find_cases = list()                         // cases - для названий предметов на русском
 
 	var/find_prob = FIND_PROBABILITY_ZERO           // probability of getting it
-	var/find_origin = list(ORIGIN_HUMAN)            // finds with the same origin are usually found near each other
+	var/find_origin = ORIGIN_HUMAN                  // finds with the same origin are usually found near each other
 
 	var/excavation_required = 0		                // how deep its located in the mine turf - from 0 to 150
 	var/clearance_range = 4			                // how close excavation has to come to extract the item (with one take)
 
-/datum/find/New(digsite, exc_req)
+/datum/find/New(exc_req)
 	excavation_required = exc_req * 2
 	clearance_range = pick(4, 6, 8, 10, 12)
 
-/datum/find/proc/spawn_find(atom/loc)
+/datum/find/proc/spawn_find(atom/loc, mob/living/carbon/human/H)
 	if(!loc)
 		return
 	var/obj/item/new_find = new find_type
@@ -25,12 +26,18 @@
 	// lets stylize our find
 	stylize_find(new_find)
 
-	// give it to the player
+	// finally, give it to the player
 	new_find.loc = loc
+	if(H && ishuman(H))
+		H.put_in_any_hand_if_possible(new_find)
+		H.visible_message("<span class='notice'>[CASE(H, NOMINATIVE_CASE)] достает из породы [new_find]!</span>",
+		"<span class='notice'>Вы успешно заканчиваете раскопку, доставая из породы [new_find]!</span>")
 
 /datum/find/proc/stylize_find(obj/item/new_find)
 	if(find_name)
 		new_find.name = find_name
+	if(find_cases.len)
+		new_find.cases = find_cases
 	if(find_desc)
 		new_find.desc = find_desc
 	if(find_icon)
@@ -47,11 +54,9 @@
 /datum/find/bowl
 	find_type = /obj/item/weapon/reagent_containers/glass/replenishing
 	find_name = "ancient bowl"
-	find_desc = "You feel as if [src] is slowly filling up..."
+	find_cases = list("древняя миска", "древней миски", "древней миске", "древняя миска", "древней миской", "древней миске")
+	find_desc = "Ощущение, будто она наполняется сама по себе..."
 	find_icon = 'icons/obj/xenoarchaeology/finds.dmi'
-	find_icon_state = "bowl"
-
-	find_origin = list(ORIGIN_WIZARD, ORIGIN_MARTIAN, ORIGIN_ELDRITCH, ORIGIN_PRECURSOR)
 
 /datum/find/bowl/stylize_find(obj/item/new_find)
 	. = ..()
@@ -59,18 +64,36 @@
 		var/obj/item/weapon/reagent_containers/glass/replenishing/B = new_find
 		switch(find_origin)
 			if(ORIGIN_WIZARD)
-				find_icon_state = "bowl_wizard"
 				B.spawning_id = pick("lube", "beer", "cleaner", "glycerol", "hyperzine", "holywater", "unholywater")
 			if(ORIGIN_MARTIAN)
-				find_icon_state = "bowl_wizard"
-				B.spawning_id = pick("lube", "beer", "cleaner", "glycerol", "hyperzine")
+				B.spawning_id = pick("lube", "stoxin", "glycerol", "fuel", "hyperzine")
 			if(ORIGIN_ELDRITCH)
-				find_icon_state = "bowl_wizard"
-				B.spawning_id = pick("blood", "beer", "cleaner", "glycerol", "hyperzine")
+				B.spawning_id = pick("blood", "unholywater", "stoxin", "fuel", "hyperzine")
 			if(ORIGIN_PRECURSOR)
-				find_icon_state = "bowl_wizard"
-				B.spawning_id = pick("lube", "beer", "cleaner", "glycerol", "hyperzine")
+				B.spawning_id = pick("stoxin", "cleaner", "hyperzine")
+	if(prob(50))
+		find_name = "ancient urn"
+		find_cases = list("древняя урна", "древней урны", "древней урне", "древняя урна", "древней урной", "древней урне")
+		find_desc += " Она [pick("тихо шепчет", "издает едва слышимый рычащий звук", "мягко свистит", "тихо жужжит", "пульсирует")], когда вы подносите ее к уху."
+		find_icon_state = "urn_[find_origin]"
+	else
+		find_icon_state = "bowl_[find_origin]"
 
+/datum/find/bowl/wizard
+	find_origin = ORIGIN_WIZARD
+	find_prob = FIND_PROBABILITY_COMMON
+
+/datum/find/bowl/martian
+	find_origin = ORIGIN_MARTIAN
+	find_prob = FIND_PROBABILITY_COMMON
+
+/datum/find/bowl/eldritch
+	find_origin = ORIGIN_ELDRITCH
+	find_prob = FIND_PROBABILITY_COMMON
+
+/datum/find/bowl/precursor
+	find_origin = ORIGIN_PRECURSOR
+	find_prob = FIND_PROBABILITY_COMMON
 
 /obj/item/weapon/reagent_containers/glass/replenishing
 	var/spawning_id
@@ -78,70 +101,10 @@
 /obj/item/weapon/reagent_containers/glass/replenishing/atom_init()
 	. = ..()
 	START_PROCESSING(SSobj, src)
-	spawning_id = pick("blood", "holywater", "unholywater", "lube", "stoxin", "beer", "glycerol", "fuel", "cleaner")
 
 /obj/item/weapon/reagent_containers/glass/replenishing/process()
 	if(spawning_id)
 		reagents.add_reagent(spawning_id, 0.3)
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Strange rocks
-
-//have all strange rocks be cleared away using welders for now
-/obj/item/weapon/ore/strangerock
-	name = "Strange rock"
-	desc = "Seems to have some unusal strata evident throughout it."
-	icon = 'icons/obj/xenoarchaeology/finds.dmi'
-	icon_state = "strange"
-	var/obj/item/weapon/inside
-	origin_tech = "materials=5"
-
-/obj/item/weapon/ore/strangerock/atom_init(mapload, inside_item_type = 0)
-	. = ..()
-	if(inside_item_type)
-		new/obj/item/weapon/archaeological_find(src, inside_item_type)
-		inside = locate() in contents
-
-/*/obj/item/weapon/ore/strangerock/ex_act(var/severity)
-	if(severity && prob(30))
-		visible_message("The [src] crumbles away, leaving some dust and gravel behind.")*/
-
-/obj/item/weapon/ore/strangerock/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/weapon/pickaxe/brush))
-		if(I.use_tool(src, user, 20, volume = 50))
-			if(inside)
-				inside.forceMove(get_turf(src))
-				visible_message("<span class='notice'>\The [src] is brushed away revealing \the [inside].</span>")
-				inside = null
-			else
-				visible_message("<span class='warning'>\The [src] reveals nothing!</span>")
-			qdel(src)
-			return
-
-	if(iswelding(I))
-		var/obj/item/weapon/weldingtool/WT = I
-		user.SetNextMove(CLICK_CD_INTERACT)
-		if(WT.use_tool(src, user, 20, volume = 50))
-			if(WT.isOn())
-				if(WT.get_fuel() >= 4)
-					if(inside)
-						inside.forceMove(get_turf(src))
-						user.visible_message("<span class='info'>[src] burns away revealing [inside].</span>")
-					else
-						user.visible_message("<span class='info'>[src] burns away into nothing.</span>")
-					qdel(src)
-					WT.use(4)
-				else
-					visible_message("<span class='info'>A few sparks fly off [src], but nothing else happens.</span>")
-					WT.use(1)
-		return
-
-	. = ..()
-	if(prob(33))
-		visible_message("<span class='warning'>[src] crumbles away, leaving some dust and gravel behind.</span>")
-		qdel(src)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Archaeological finds
@@ -203,7 +166,6 @@
 			new_item.icon_state = "urn"
 			apply_image_decorations = 1
 			if(prob(20))
-				additional_desc = "It [pick("whispers faintly","makes a quiet roaring sound","whistles softly","thrums quietly","throbs")] if you put it to your ear."
 		if(3)
 			item_type = "[pick("fork","spoon","knife")]"
 			if(prob(25))

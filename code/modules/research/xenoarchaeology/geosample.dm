@@ -86,9 +86,11 @@
 	find_presence["chlorine"] = rand(500,2500) / 100
 
 	//loop over finds, grab any relevant stuff
+	/*
 	for(var/datum/find/F in container.finds)
 		var/responsive_reagent = get_responsive_reagent(F.find_type)
 		//find_presence[responsive_reagent] = F.dissonance_spread
+	*/
 
 	//loop over again to reset values to percentages
 	var/total_presence = 0
