@@ -1,4 +1,56 @@
 //////////////////////////////////////////
+// Ancient Mining Hud - can see living beings through walls
+/datum/find/ancienthud
+	find_type = /obj/item/clothing/glasses/hud/mining
+	find_name = "strange looking HUD"
+	find_cases = list("загадочный HUD", "загадочного HUD", "загадочному HUD", "загадочный HUD", "загадочным HUD", "загадочному HUD")
+	find_desc = "Модифицированный визор, имеет встроенные датчики сканирования живых существ."
+
+	find_icon = 'icons/obj/xenoarchaeology/finds.dmi'
+	find_icon_state = "HUDmining"
+	find_item_state_world = "HUDmining_w"
+
+	find_origin = ORIGIN_HUMAN
+	find_prob = FIND_PROBABILITY_COMMON
+
+/datum/find/ancienthud/stylize_find(obj/item/new_find)
+	. = ..()
+	if(istype(new_find, /obj/item/clothing/glasses/hud/mining))
+		var/obj/item/clothing/glasses/hud/mining/M = new_find
+		M.lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
+		M.icon_custom = 'icons/mob/eyes.dmi'
+		M.item_state = "glasses"
+		M.vision_flags = SEE_MOBS
+
+/datum/find/ancienthud/martian
+	find_origin = ORIGIN_MARTIAN
+	find_prob = FIND_PROBABILITY_UNCOMMON
+
+/datum/find/ancienthud/precursor
+	find_origin = ORIGIN_PRECURSOR
+	find_prob = FIND_PROBABILITY_RARE
+
+//////////////////////////////////////////
+// Claymore - strong weapon with force of 20
+/datum/find/claymore
+	find_type = /obj/item/weapon/claymore/light
+	find_name = "claymore"
+	find_cases = list("клеймор", "клеймора", "клеймору", "клеймор", "клеймором", "клеймору")
+	find_desc = "Двуручный боевой меч древнего образца. Тяжёлый, устрашающий и смертельно опасный в умелых руках."
+	find_origin = ORIGIN_HUMAN
+	find_prob = FIND_PROBABILITY_COMMON
+
+//////////////////////////////////////////
+// Sleepy pen - straight up traitors item. humans are bad for the environment...
+/datum/find/sleepypen
+	find_type = /obj/item/weapon/pen/sleepypen
+	find_name = "pen"
+	find_cases = list("ручка", "ручки", "ручке", "ручка", "ручкой", "ручке")
+	find_desc = "Обычная, на первый взгляд, ручка. На вес ощущается чуть тяжеловатой."
+	find_origin = ORIGIN_HUMAN
+	find_prob = FIND_PROBABILITY_UNCOMMON
+
+//////////////////////////////////////////
 // Pip-Boy - back in the day people used to wear these
 /datum/find/pipboy
 	find_type = /obj/item/clothing/gloves/pipboy

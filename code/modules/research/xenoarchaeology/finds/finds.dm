@@ -2,7 +2,7 @@
 	var/find_type = /obj/item               // type // In case they need to be overwritten:
 
 	var/find_name = "ancient find"                  // name
-	var/find_desc = "Some old relic of the past"    // description
+	var/find_desc = ""                              // description
 	var/find_icon = FALSE                           // icon
 	var/find_icon_state = ""                        // icon_state
 	var/find_item_state_world = ""                  // item_state_world

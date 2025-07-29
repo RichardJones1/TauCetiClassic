@@ -165,6 +165,7 @@ SUBSYSTEM_DEF(xenoarch)
 	flags |= SS_NO_INIT
 
 /datum/controller/subsystem/xenoarch/proc/get_random_digsite_origin()
+	// from less powerful silly stuff of humans to the OP items of the Precursor race
 	var/digsite_origin = pick(
 	100;ORIGIN_HUMAN,
 	100;ORIGIN_WIZARD,

@@ -10,7 +10,7 @@
 #define FIND_VIEW_RANGE 20 // how close excavation has to come to show a xenoarch overlay on the mine turf
 
 // Origin (who created this relic). In order from the most recent to the oldest
-#define ORIGIN_HUMAN "human"        // Mostly used for finds like pip-boy etc
+#define ORIGIN_HUMAN "human"        // Mostly used for finds like pip-boy etc.
 #define ORIGIN_WIZARD "wizard"      // Complicated machines, made to look archaic as to give the impression that it is magical. However, this magic has been mostly debunked by Nanotrasen researchers.
 #define ORIGIN_MARTIAN "martian"    // Flesh-based machines, originated initally from Mars
 #define ORIGIN_SILICON "silicon"    // A race of silicon-based sentients, they are usually tuned to be silicon based

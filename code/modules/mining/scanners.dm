@@ -66,13 +66,3 @@
 
 /datum/action/item_action/hands_free/toggle_goggles
 	name = "Toggle Goggles"
-/obj/item/clothing/glasses/hud/mining/ancient
-	name = "Ancient Mining Hud MK II"
-	desc = "This hud for mine work in hostile territory, with builded bioscanner inside."
-	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_VISIBLE
-	icon = 'icons/obj/xenoarchaeology/finds.dmi'
-	icon_custom = 'icons/mob/eyes.dmi'
-	icon_state = "HUDmining"
-	item_state = "glasses"
-	item_state_world = "HUDmining_w"
-	vision_flags = SEE_MOBS
