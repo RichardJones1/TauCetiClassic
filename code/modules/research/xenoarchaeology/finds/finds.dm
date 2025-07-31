@@ -6,17 +6,13 @@
 	var/find_icon = FALSE                           // icon
 	var/find_icon_state = ""                        // icon_state
 	var/find_item_state_world = ""                  // item_state_world
-	var/find_cases = list()                         // cases - для названий предметов на русском
+	var/list/find_cases = list()                    // cases - for naming in russian
 
 	var/find_prob = FIND_PROBABILITY_ZERO           // probability of getting it
 	var/find_origin = ORIGIN_HUMAN                  // finds with the same origin are usually found near each other
 
 	var/excavation_required = 0		                // how deep its located in the mine turf - from 0 to 150
 	var/clearance_range = 4			                // how close excavation has to come to extract the item (with one take)
-
-/datum/find/New(exc_req)
-	excavation_required = exc_req * 2
-	clearance_range = pick(4, 6, 8, 10, 12)
 
 /datum/find/proc/spawn_find(atom/loc, mob/living/carbon/human/H)
 	if(!loc)
@@ -165,7 +161,6 @@
 			new_item.icon = 'icons/obj/xenoarchaeology/finds.dmi'
 			new_item.icon_state = "urn"
 			apply_image_decorations = 1
-			if(prob(20))
 		if(3)
 			item_type = "[pick("fork","spoon","knife")]"
 			if(prob(25))
@@ -225,18 +220,6 @@
 			additional_desc = "[pick("It looks like it could take a limb off",\
 			"Could be some kind of animal trap",\
 			"There appear to be [pick("dark red","dark purple","dark green","dark blue")] stains along part of it")]."
-		if(10)
-			apply_prefix = 0
-			var/pickpipboy = pick(1, 2, 3)
-			switch(pickpipboy)
-				if(1)
-					new_item = new /obj/item/clothing/gloves/pipboy(loc)
-				if(2)
-					new_item = new /obj/item/clothing/gloves/pipboy/pimpboy3billion(loc)
-				if(3)
-					new_item = new /obj/item/clothing/gloves/pipboy/pipboy3000mark4(loc)
-			apply_image_decorations = 0
-			apply_material_decorations = 0
 		if(11)
 			item_type = "box"
 			new_item = new /obj/item/weapon/storage/box(loc)
@@ -347,13 +330,6 @@
 			apply_prefix = 0
 			new_item = new /obj/item/device/soulstone(loc)
 			item_type = new_item.name
-			apply_material_decorations = 0
-		if(22)
-			apply_prefix = 0
-			new_item = new /obj/item/clothing/glasses/hud/mining/ancient(loc)
-			new_item.name = pick("strange looking hud", "strange looking glasses")
-			new_item.desc = "It glows faintly."
-			apply_image_decorations = 0
 			apply_material_decorations = 0
 		if(23)
 			apply_prefix = 0

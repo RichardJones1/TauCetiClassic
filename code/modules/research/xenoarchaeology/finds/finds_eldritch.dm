@@ -3,19 +3,16 @@
 /datum/find/statuette
 	find_type = /obj/item/weapon/vampiric
 	find_name = "statuette"
-	find_cases = list("статуэтка", "статуэтки", "статуэтке", "статуэтка", "статуэткой", "статуэтке")
-	find_desc = "Непримечательная старая статуэтка. Не особо понятно, что она должна собой представлять."
-
-	find_icon = 'icons/obj/xenoarchaeology/finds.dmi'
-	find_state = "statuette"
 
 	find_origin = ORIGIN_ELDRITCH
 	find_prob = FIND_PROBABILITY_UNCOMMON
 
 /obj/item/weapon/vampiric
 	name = "statuette"
-	icon_state = "statuette"
+	desc = "Непримечательная старая статуэтка. Не особо понятно, что она должна собой представлять."
+	cases = list("статуэтка", "статуэтки", "статуэтке", "статуэтка", "статуэткой", "статуэтке")
 	icon = 'icons/obj/xenoarchaeology/finds.dmi'
+	icon_state = "statuette"
 	flags = HEAR_TALK
 	var/charges = 0
 	var/list/nearby_mobs = list()

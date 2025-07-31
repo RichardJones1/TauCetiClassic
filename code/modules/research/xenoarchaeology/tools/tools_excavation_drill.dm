@@ -8,7 +8,7 @@
 	toolspeed = 0.6
 	desc = "Basic archaeological drill combining ultrasonic excitation and bluespace manipulation to provide extreme precision. The tip is adjustable from 1 to 30 cms."
 	usesound = 'sound/weapons/thudswoosh.ogg'
-	drill_verb = "drilling"
+	drill_verb = "бурить"
 	force = 15.0
 	w_class = SIZE_SMALL
 	attack_verb = list("drills")

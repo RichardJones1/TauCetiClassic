@@ -1,7 +1,6 @@
 // Probability of getting a specific find:
 #define FIND_PROBABILITY_ZERO 0 // For items that should not appear
-#define FIND_PROBABILITY_MYTHICAL 10
-#define FIND_PROBABILITY_VERYRARE 25
+#define FIND_PROBABILITY_MYTHICAL 25
 #define FIND_PROBABILITY_RARE 50
 #define FIND_PROBABILITY_UNCOMMON 75
 #define FIND_PROBABILITY_COMMON 100 // Normal chance
@@ -9,13 +8,12 @@
 
 #define FIND_VIEW_RANGE 20 // how close excavation has to come to show a xenoarch overlay on the mine turf
 
-// Origin (who created this relic). In order from the most recent to the oldest
-#define ORIGIN_HUMAN "human"        // Mostly used for finds like pip-boy etc.
-#define ORIGIN_WIZARD "wizard"      // Complicated machines, made to look archaic as to give the impression that it is magical. However, this magic has been mostly debunked by Nanotrasen researchers.
-#define ORIGIN_MARTIAN "martian"    // Flesh-based machines, originated initally from Mars
-#define ORIGIN_SILICON "silicon"    // A race of silicon-based sentients, they are usually tuned to be silicon based
-#define ORIGIN_ELDRITCH "eldritch"  // An unknown race, possibly not even from this dimension. Inspired by Lovecraftian horrors. Experiment with your peril.
-#define ORIGIN_PRECURSOR "precursor"// The oldest artifacts, made by a race that might have created all of life itself. Not much is known about them.
+// Origin (who created this relic). In order from the most recent to the oldest and powerful
+#define ORIGIN_HUMAN "human"        // Mostly less powerful stuff, more of fluff things. Humans huh.
+#define ORIGIN_WIZARD "wizard"      // Complicated machines, made to look archaic as to give the impression that it is magical. However, this magic has been mostly debunked by Nanotrasen researchers. Not overpowered effects, but can be very random.
+#define ORIGIN_MARTIAN "martian"    // Flesh-based machines, originated initally from Mars. Powerful effects, focused on organics.
+#define ORIGIN_ELDRITCH "eldritch"  // An unknown race, possibly not even from this dimension. Inspired by Lovecraftian horrors. Even more powerful, but there is always a cost. Experiment with your peril.
+#define ORIGIN_PRECURSOR "precursor"// The oldest artifacts, made by a race that might have created all of life itself. Not much is known about them. Insanely powerful stuff, but also insanely rare..
 
 ///artifact energy release method
 #define ARTIFACT_EFFECT_TOUCH 0

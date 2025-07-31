@@ -175,7 +175,7 @@ var/global/mining_shuttle_location = 0 // 0 = station 13, 1 = mining station
 	origin_tech = "materials=1;engineering=1"
 	attack_verb = list("hit", "pierced", "sliced", "attacked")
 	usesound = 'sound/items/pickaxe.ogg'
-	var/drill_verb = "picking"
+	var/drill_verb = "копать"
 	var/mineral_multiply_coefficient = 1.0 // default
 	sharp = 1
 
@@ -331,7 +331,7 @@ var/global/mining_shuttle_location = 0 // 0 = station 13, 1 = mining station
 	attack_verb = list("hit", "pierced", "sliced", "attacked")
 	usesound = 'sound/items/drill.ogg'
 	hitsound = list('sound/items/drill_hit.ogg')
-	drill_verb = "drill"
+	drill_verb = "бурить"
 	toolspeed = 0.55
 	mineral_multiply_coefficient = 1.0
 	var/drill_cost = 35
@@ -426,7 +426,7 @@ var/global/mining_shuttle_location = 0 // 0 = station 13, 1 = mining station
 	mineral_multiply_coefficient = 0.8
 	origin_tech = "materials=3;powerstorage=2;engineering=2"
 	desc = "Cracks rocks with sonic blasts, perfect for killing cave lizards."
-	drill_verb = "hammering"
+	drill_verb = "отбивать"
 
 /obj/item/weapon/pickaxe/drill/jackhammer/attackby(obj/item/I, mob/user, params)
 	return
@@ -439,8 +439,6 @@ var/global/mining_shuttle_location = 0 // 0 = station 13, 1 = mining station
 	mineral_multiply_coefficient = 1.2
 	origin_tech = "materials=6;powerstorage=4;engineering=5"
 	desc = "Yours is the drill that will pierce the heavens!"
-	drill_verb = "drilling"
-
 
 /obj/item/weapon/pickaxe/drill/borgdrill
 	name = "cyborg mining drill"
@@ -449,7 +447,6 @@ var/global/mining_shuttle_location = 0 // 0 = station 13, 1 = mining station
 	toolspeed = 0.4
 	mineral_multiply_coefficient = 1.2
 	desc = ""
-	drill_verb = "drilling"
 
 /obj/item/weapon/pickaxe/drill/borgdrill/attackby(obj/item/I, mob/user, params)
 	return

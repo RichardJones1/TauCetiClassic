@@ -122,7 +122,7 @@
 	desc = "A smaller, more precise version of the pickaxe (30 centimetre excavation depth)."
 	excavation_amount = 30
 	usesound = 'sound/items/Crowbar.ogg'
-	drill_verb = "clearing"
+	drill_verb = "очищать"
 	w_class = SIZE_SMALL
 
 /obj/item/weapon/pickaxe/cyb/attack_self(mob/user)

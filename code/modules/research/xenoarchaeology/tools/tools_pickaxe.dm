@@ -11,7 +11,7 @@
 	desc = "Thick metallic wires for clearing away dust and loose scree (1 centimetre excavation depth)."
 	excavation_amount = 1
 	usesound = 'sound/weapons/thudswoosh.ogg'
-	drill_verb = "brushing"
+	drill_verb = "очищать"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/one_pick
@@ -23,7 +23,7 @@
 	desc = "A miniature excavation tool for precise digging (2 centimetre excavation depth)."
 	excavation_amount = 2
 	usesound = 'sound/items/Screwdriver.ogg'
-	drill_verb = "delicately picking"
+	drill_verb = "осторожно ковырять"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/two_pick
@@ -35,7 +35,7 @@
 	desc = "A miniature excavation tool for precise digging (4 centimetre excavation depth)."
 	excavation_amount = 4
 	usesound = 'sound/items/Screwdriver.ogg'
-	drill_verb = "delicately picking"
+	drill_verb = "осторожно ковырять"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/three_pick
@@ -47,7 +47,7 @@
 	desc = "A miniature excavation tool for precise digging (6 centimetre excavation depth)."
 	excavation_amount = 6
 	usesound = 'sound/items/Screwdriver.ogg'
-	drill_verb = "delicately picking"
+	drill_verb = "осторожно ковырять"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/four_pick
@@ -59,7 +59,7 @@
 	desc = "A miniature excavation tool for precise digging (8 centimetre excavation depth)."
 	excavation_amount = 8
 	usesound = 'sound/items/Screwdriver.ogg'
-	drill_verb = "delicately picking"
+	drill_verb = "осторожно ковырять"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/five_pick
@@ -71,7 +71,7 @@
 	desc = "A miniature excavation tool for precise digging (10 centimetre excavation depth)."
 	excavation_amount = 10
 	usesound = 'sound/items/Screwdriver.ogg'
-	drill_verb = "delicately picking"
+	drill_verb = "осторожно ковырять"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/six_pick
@@ -83,7 +83,7 @@
 	desc = "A miniature excavation tool for precise digging (12 centimetre excavation depth)."
 	excavation_amount = 12
 	usesound = 'sound/items/Screwdriver.ogg'
-	drill_verb = "delicately picking"
+	drill_verb = "осторожно ковырять"
 	w_class = SIZE_TINY
 
 /obj/item/weapon/pickaxe/hand
@@ -95,7 +95,7 @@
 	desc = "A smaller, more precise version of the pickaxe (30 centimetre excavation depth)."
 	excavation_amount = 30
 	usesound = 'sound/items/Crowbar.ogg'
-	drill_verb = "clearing"
+	drill_verb = "копать"
 	w_class = SIZE_SMALL
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

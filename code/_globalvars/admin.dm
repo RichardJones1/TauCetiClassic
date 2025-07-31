@@ -5,3 +5,5 @@ var/global/list/stickyban_admin_texts = list()
 // Stores the timerid of the callback that restores all stickybans after an admin joins
 // Run /proc/restore_stickybans
 var/global/stickyban_admin_exemption_timer_id
+
+var/global/list/xenoarchtest = list()

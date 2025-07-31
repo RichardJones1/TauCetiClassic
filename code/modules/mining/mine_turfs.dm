@@ -29,12 +29,13 @@
 	var/global/list/rock_side_overlays
 
 	// xenoarchaeology stuff
-	var/archaeo_overlay = ""
 	var/list/finds
+	var/digsite_origin = ORIGIN_HUMAN
 	var/datum/artifact_find/artifact_find
-	var/excavation_level = 0
+	var/archaeo_overlay = ""
 	var/next_rock = 0
 	var/excav_overlay = ""
+	var/excavation_level = 0
 
 
 /turf/simulated/mineral/atom_init(mapload)
@@ -191,20 +192,20 @@
 			var/obj/item/weapon/pickaxe/drill/D = P
 			if(!(istype(D, /obj/item/weapon/pickaxe/drill/borgdrill) || istype(D, /obj/item/weapon/pickaxe/drill/jackhammer)))	//borgdrill & jackhammer can't lose energy and crit fail
 				if(D.state)
-					to_chat(user, "<span class='danger'>[D] is not ready!</span>")
+					to_chat(user, "<span class='danger'>Устройство не готово!</span>")
 					return
 				if(!D.power_supply?.use(D.drill_cost))
-					to_chat(user, "<span class='danger'>No power!</span>")
+					to_chat(user, "<span class='danger'>Нет энергии!</span>")
 					return
 
-		to_chat(user, "<span class='warning'>You start [P.drill_verb].</span>")
+		to_chat(user, "<span class='warning'>Вы начинаете [P.drill_verb].</span>")
 
 		if(P.use_tool(src, user, 2 SECONDS, volume = 100))
 			if(ishuman(user))
 				var/mob/living/carbon/human/H = user
 				var/obj/item/organ/external/BPHand = H.get_bodypart(H.hand ? BP_L_ARM : BP_R_ARM)
 				BPHand.adjust_pumped(0.1, 30)
-			to_chat(user, "<span class='notice'>You finish [P.drill_verb] the rock.</span>")
+			to_chat(user, "<span class='notice'>Вы заканчиваете [P.drill_verb] породу.</span>")
 
 			if(istype(P, /obj/item/weapon/pickaxe/drill/jackhammer))	//Jackhammer will just dig 3 tiles in dir of user
 				for(var/turf/simulated/mineral/M in range(user, 1))
@@ -222,24 +223,24 @@
 				// if we go to 92, then to 100 in one brush, 100% to extract
 				// if we go over 100, 0% to extract
 				//
-				for(var/datum/find/F in finds)
+				for(var/list/F in finds)
 					// went under or right into excavation_required, a chance to dig it up
-					if(excavation_level + P.excavation_amount <= F.excavation_required)
+					if(excavation_level + P.excavation_amount <= F["excavation_required"])
 						// previously got into safe position ( = excavation_required - clearance_range)
-						if(excavation_level == F.excavation_required - F.clearance_range)
+						if(excavation_level == F["excavation_required"] - F["clearance_range"])
 							// we chose the right pick! perfect extraction!
-							if(excavation_level + P.excavation_amount == F.excavation_required)
+							if(excavation_level + P.excavation_amount == F["excavation_required"])
 								excavate_find(100, F, user)
 							// chose the wrong pick. still has a 50% chance of extraction
-							else if(excavation_level + P.excavation_amount < F.excavation_required)
+							else if(excavation_level + P.excavation_amount < F["excavation_required"])
 								excavate_find(50, F, user)
 							else // went over the find, fail 100%
 								excavate_find(0, F, user)
 						// didnt get into the safe possition previously, but got into clearance_range. 30% chance
-						else if(excavation_level + P.excavation_amount > F.excavation_required - F.clearance_range)
+						else if(excavation_level + P.excavation_amount > F["excavation_required"] - F["clearance_range"])
 							excavate_find(30, F, user)
 					// went over the find, fail 100%
-					else if(excavation_level + P.excavation_amount > F.excavation_required)
+					else if(excavation_level + P.excavation_amount >F["excavation_required"])
 						excavate_find(0, F, user)
 
 			if( excavation_level + P.excavation_amount >= MAX_EXCAVATION_AMOUNT)
@@ -268,8 +269,7 @@
 
 			// archaeo overlays
 			if(!archaeo_overlay && finds && finds.len)
-				var/datum/find/F = finds[1]
-				if(F.excavation_required <= excavation_level + FIND_VIEW_RANGE)
+				if(finds[1]["excavation_required"] <= excavation_level + FIND_VIEW_RANGE)
 					archaeo_overlay = "overlay_archaeo[rand(1,3)]"
 					add_overlay(archaeo_overlay)
 
@@ -288,6 +288,7 @@
 			// update overlays displaying excavation level
 			if( !(excav_overlay && excavation_level > 0) || update_excav_overlay )
 				var/excav_quadrant = round(excavation_level / (MAX_EXCAVATION_AMOUNT / 4)) + 1
+				world.log << excav_quadrant
 				excav_overlay = "overlay_excv[excav_quadrant]_[rand(1,3)]"
 				add_overlay(excav_overlay)
 
@@ -328,23 +329,25 @@
 		visible_message("<span class='notice'>An old dusty crate was buried within!</span>")
 		new /obj/structure/closet/crate/secure/loot(src)
 
-/turf/simulated/mineral/proc/excavate_find(prob_clean = 0, datum/find/F, mob/user)
+/turf/simulated/mineral/proc/excavate_find(prob_clean = 0, list/F, mob/user)
 	// with skill and luck, players can cleanly extract finds
 	// otherwise, they come out inside a strange rock that can break apart
 	if(prob(prob_clean))
 		if(ishuman(user))
 			var/mob/living/carbon/human/H = user
-			F.spawn_find(src, H)
+			SSxenoarch.spawn_find(digsite_origin, src, H)
 		else
-			F.spawn_find(src)
+			SSxenoarch.spawn_find(digsite_origin, src)
 	else if(prob_clean > 0)
-		new /obj/item/weapon/ore/strangerock(src, F)
+		new /obj/item/weapon/ore/strangerock(src, digsite_origin)
 		user.visible_message("<span class='notice'>[CASE(user, NOMINATIVE_CASE)] заканчивает раскопку. В породе виднеется камень странной формы...</span>",
 		"<span class='notice'>Вы заканчиваете раскопку. Извлечь ископаемое не получилось, но в породе виднеется камень странной формы...</span>")
 	else
 		visible_message("<span class='warning'>[pick("Что-то с хрустящим звуком ломается в породе...", "Часть породы обваливается, забирая с собой все хранившиеся в ней секреты...", "Что-то ломается внутри породы...")]</span>")
 		artifact_debris(0)
-	finds.Remove(F)
+	for(var/find_to_check in finds)
+		if(find_to_check["excavation_required"] == F["excavation_required"])
+			finds -= find_to_check
 	set_mine_hud()
 
 /turf/simulated/mineral/proc/artifact_debris(severity = 0)

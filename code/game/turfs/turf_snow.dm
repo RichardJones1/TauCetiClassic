@@ -166,17 +166,17 @@
 			var/obj/item/weapon/pickaxe/drill/D = P
 			if(!(istype(D, /obj/item/weapon/pickaxe/drill/borgdrill) || istype(D, /obj/item/weapon/pickaxe/drill/jackhammer)))	//borgdrill & jackhammer can't lose energy and crit fail
 				if(D.state)
-					to_chat(user, "<span class='danger'>[D] is not ready!</span>")
+					to_chat(user, "<span class='danger'>Устройство не готово!</span>")
 					return
 				if(!D.power_supply?.use(D.drill_cost))
-					to_chat(user, "<span class='danger'>No power!</span>")
+					to_chat(user, "<span class='danger'>Нет энегии!</span>")
 					return
 
 		playsound(user, P.usesound, VOL_EFFECTS_INSTRUMENT)
-		to_chat(user, "<span class='warning'>You start [P.drill_verb].</span>")
+		to_chat(user, "<span class='warning'>Вы начинаете [P.drill_verb].</span>")
 
 		if(!user.is_busy(src) && P.use_tool(src, user, 10, volume = 100))
-			to_chat(user, "<span class='notice'>You finish [P.drill_verb] the rock.</span>")
+			to_chat(user, "<span class='notice'>Вы заканчивается [P.drill_verb] породу.</span>")
 			GetDrilled()
 
 /obj/structure/flora/mine_rocks/proc/GetDrilled()

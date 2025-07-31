@@ -58,20 +58,20 @@
 	find_origin = ORIGIN_HUMAN
 	find_prob = FIND_PROBABILITY_COMMON
 
-/datum/find/pipboy/3000mark4
+/datum/find/pipboy/mark4
 	find_type = /obj/item/clothing/gloves/pipboy/pipboy3000mark4
-	name = "pip-boy 3000 mark IV"
+	find_name = "pip-boy 3000 mark IV"
 	find_prob = FIND_PROBABILITY_RARE
 
-/datum/find/pipboy/3billion
+/datum/find/pipboy/billion
 	find_type = /obj/item/clothing/gloves/pipboy/pimpboy3billion
-	name = "pimp-boy 3 billion"
+	find_name = "pimp-boy 3 billion"
 	find_prob = FIND_PROBABILITY_MYTHICAL
 
 /obj/item/clothing/gloves/pipboy
 	name = "pip-boy 3000"
-	find_cases = list("Пип-бой 3000", "Пип-боя 3000", "Пип-бою 3000", "Пип-бой 3000", "Пип-боем 3000", "Пип-бою 3000")
-	find_desc = "Странного вида девайс с экраном. По ощущениям, его носят на руке. Эта штука видала лучшие дни."
+	cases = list("Пип-бой 3000", "Пип-боя 3000", "Пип-бою 3000", "Пип-бой 3000", "Пип-боем 3000", "Пип-бою 3000")
+	desc = "Странного вида девайс с экраном. По ощущениям, его носят на руке. Эта штука видала лучшие дни."
 	icon = 'icons/obj/xenoarchaeology/finds.dmi'
 	icon_state = "pipboy3000"
 	item_state = "pipboy3000"
@@ -377,13 +377,13 @@
 
 /obj/item/clothing/gloves/pipboy/pimpboy3billion
 	name = "pimp-boy 3 billion"
-	find_cases = list("Пимп-бой 3 миллиарда", "Пип-боя 3 милларда", "Пип-бою 3 миллиарда", "Пип-бой 3 миллиарда", "Пип-боем 3 милларда", "Пип-бою 3 миллиарда")
+	cases = list("Пимп-бой 3 миллиарда", "Пип-боя 3 милларда", "Пип-бою 3 миллиарда", "Пип-бой 3 миллиарда", "Пип-боем 3 милларда", "Пип-бою 3 миллиарда")
 	desc = "Странного вида девайс в корпусе из золота и серебра, с инкрустированными алмазами. Кажется, его носили на руке."
 	icon_state = "pimpboy3billion"
 	item_state = "pimpboy3billion"
 
 /obj/item/clothing/gloves/pipboy/pipboy3000mark4
 	name = "pip-boy 3000 mark IV"
-	find_cases = list("Пип-бой 3000 Марк 4", "Пип-боя 3000 Марк 4", "Пип-бою 3000 Марк 4", "Пип-бой 3000 Марк 4", "Пип-боем 3000 Марк 4", "Пип-бою 3000 Марк 4")
+	cases = list("Пип-бой 3000 Марк 4", "Пип-боя 3000 Марк 4", "Пип-бою 3000 Марк 4", "Пип-бой 3000 Марк 4", "Пип-боем 3000 Марк 4", "Пип-бою 3000 Марк 4")
 	icon_state = "pipboy3000mark4"
 	item_state = "pipboy3000mark4"

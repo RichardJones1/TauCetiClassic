@@ -3,7 +3,8 @@
 
 /obj/structure/boulder
 	name = "rocky debris"
-	desc = "Leftover rock from an excavation, it's been partially dug out already but there's still a lot to go."
+	cases = list("валун", "валуна", "валуну", "валун", "валуном", "валуну")
+	desc = "Оставшаяся после раскопок порода."
 	icon = 'icons/obj/mining.dmi'
 	icon_state = "boulder1"
 	density = TRUE
@@ -47,18 +48,18 @@
 	if (istype(W, /obj/item/weapon/pickaxe))
 		var/obj/item/weapon/pickaxe/P = W
 
-		to_chat(user, "<span class='warning'>You start [P.drill_verb] [src].</span>")
+		to_chat(user, "<span class='warning'>Вы начинаете [P.drill_verb] [CASE(src, NOMINATIVE_CASE)].</span>")
 
 		if(!W.use_tool(src, user, 2 SECONDS, volume = 100))
 			return
 
 		if(artifact_find)
-			to_chat(user, "<span class='notice'>Seems like there is something inside!</span>")
+			to_chat(user, "<span class='notice'>Кажется, внутри [CASE(src, GENITIVE_CASE)] что-то есть!</span>")
 			tgui_interact(user)
 		else
-			to_chat(user, "<span class='notice'>You finish [P.drill_verb] [src].</span>")
+			to_chat(user, "<span class='notice'>Вы заканчиваете [P.drill_verb] [CASE(src, NOMINATIVE_CASE)].</span>")
 			excavation_level += P.excavation_amount
-			if(excavation_level > 150)
+			if(excavation_level > 80)
 				crumble_away(FALSE)
 
 /obj/structure/boulder/tgui_interact(mob/user, datum/tgui/ui)
@@ -73,7 +74,7 @@
 	data["grid"] = Game.grid
 	data["width"] = Game.grid_x*30
 	data["height"] = Game.grid_y*30
-	data["n_title"] = "Раскопка артефакта"
+	data["n_title"] = "Раскопка"
 
 	return data
 
@@ -103,12 +104,12 @@
 				var/obj/machinery/artifact/A = O
 				if(A.first_effect)
 					A.first_effect.artifact_id = artifact_find.artifact_id
-			visible_message("<span class='notice'>[src] suddenly crumbles away, revealing [O.name].</span>")
+			visible_message("<span class='notice'>[capitalize(CASE(src, NOMINATIVE_CASE))] внезапно рассыпается, открывая под собой [O.name].</span>")
 		else
-			visible_message("<span class='danger'>[src] suddenly crumbles away.</span>",\
-			"<span class='danger'>[src] has disintegrated under your onslaught, any secrets it was holding are long gone.</span>")
+			visible_message("<span class='danger'>[capitalize(CASE(src, NOMINATIVE_CASE))] внезапно рассыпается.</span>",\
+			"<span class='danger'>[capitalize(CASE(src, NOMINATIVE_CASE))] рассыпается под вашим натиском, забирая с собой все секреты, которые хранил.</span>")
 	else
-		visible_message("<span class='warning'>[src] crumbles away.</span>")
+		visible_message("<span class='warning'>[capitalize(CASE(src, NOMINATIVE_CASE))] внезапно рассыпается.</span>")
 	qdel(src)
 
 /obj/structure/boulder/Bumped(AM)
@@ -136,21 +137,22 @@
 
 /obj/item/weapon/ore/strangerock
 	name = "Strange rock"
-	desc = "Seems to have some unusal strata evident throughout it."
+	cases = list("загадочный камень", "загадочного камня", "загадочному камню", "загадочный камень", "загадочным камнем", "загадочному камню")
+	desc = "В нем прослеживаются слои, необычные для этой породы камня."
 	icon = 'icons/obj/xenoarchaeology/finds.dmi'
 	icon_state = "strange"
-	var/datum/find/find_inside
+	var/digsite_origin = ORIGIN_HUMAN
 	origin_tech = "materials=5"
 
-/obj/item/weapon/ore/strangerock/atom_init(mapload, find)
+/obj/item/weapon/ore/strangerock/atom_init(mapload, origin)
 	. = ..()
-	if(find)
-		find_inside = find
+	if(origin)
+		digsite_origin = origin
 
 /obj/item/weapon/ore/strangerock/attackby(obj/item/I, mob/user, params)
 	if(istype(I, /obj/item/weapon/pickaxe/brush))
 		if(I.use_tool(src, user, 20, volume = 50))
-			reveal_find("is brushed", 20) // 20% to get the item
+			reveal_find(20, user) // 20% to get the item
 			qdel(src)
 			return
 
@@ -160,25 +162,25 @@
 		if(WT.use_tool(src, user, 20, volume = 50))
 			if(WT.isOn())
 				if(WT.get_fuel() >= 4)
-					reveal_find("burns", 35) // 35% to get the item
+					reveal_find(35, user) // 35% to get the item
 					qdel(src)
 					WT.use(4)
 				else
-					visible_message("<span class='info'>A few sparks fly off [src], but nothing else happens.</span>")
+					visible_message("<span class='info'>Лишь несколько искр попадают на [CASE(src, NOMINATIVE_CASE)], но ничего более не происходит.</span>")
 					WT.use(1)
 		return
 
 	. = ..()
 	if(prob(33))
-		visible_message("<span class='warning'>[src] crumbles away, leaving some dust and gravel behind.</span>")
+		visible_message("<span class='warning'>[capitalize(CASE(src, NOMINATIVE_CASE))] рассыпается, оставляя после себя лишь немного пыли и гравия.</span>")
 		qdel(src)
 
-/obj/item/weapon/ore/strangerock/proc/reveal_find(tool_verb, prob_chance)
+/obj/item/weapon/ore/strangerock/proc/reveal_find(prob_chance, mob/user)
 	if(!find_inside)
-		visible_message("<span class='notice'>\The [src] reveals nothing!</span>")
+		visible_message("<span class='notice'>Внутри [CASE(src, GENITIVE_CASE)] ничего не оказалось!</span>")
 		return
 	if(prob(prob_chance))
-		find_inside.spawn_find(get_turf(src))
-		visible_message("<span class='notice'>\The [src] [tool_verb] away revealing something!</span>")
+		SSxenoarch.spawn_find(digsite_origin, get_turf(src), user)
+		visible_message("<span class='notice'>[capitalize(CASE(src, NOMINATIVE_CASE))] осторожно рассыпается, внутри него что-то оказалось!</span>")
 	else
-		visible_message("<span class='warning'>\The [src] [tool_verb] away, but something that was inside crumbles into dust!</span>")
+		visible_message("<span class='warning'>[capitalize(CASE(src, NOMINATIVE_CASE))] разваливается, и что-то, что было внутри, рассыпается в прах!</span>")

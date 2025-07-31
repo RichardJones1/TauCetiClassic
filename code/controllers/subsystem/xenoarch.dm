@@ -48,11 +48,59 @@ SUBSYSTEM_DEF(xenoarch)
 		/obj/item/seeds/blackberry
 	)
 
+	// stuff to calculate probability of different finds
+	var/list/finds_prob_cache = list(
+		ORIGIN_HUMAN = list(),
+		ORIGIN_WIZARD = list(),
+		ORIGIN_MARTIAN = list(),
+		ORIGIN_ELDRITCH = list(),
+		ORIGIN_PRECURSOR  = list()
+	)
+	var/list/probability_counter =  list(
+		ORIGIN_HUMAN = 0,
+		ORIGIN_WIZARD = 0,
+		ORIGIN_MARTIAN = 0,
+		ORIGIN_ELDRITCH = 0,
+		ORIGIN_PRECURSOR  = 0
+	)
+
 /datum/controller/subsystem/xenoarch/Initialize(timeofday)
+	setup_finds_probability()
 	var/list/asteroid_zlevels = SSmapping.levels_by_trait(ZTRAIT_MINING)
 	for(var/z in asteroid_zlevels)
 		populate_z_level(z)
 	..()
+
+/datum/controller/subsystem/xenoarch/proc/setup_finds_probability()
+	for(var/find_datum_type as anything in subtypesof(/datum/find))
+		var/datum/find/find_datum = find_datum_type
+		if(!find_datum || !initial(find_datum.find_prob)) // FIND_PROBABILITY_ZERO, we dont need it
+			continue
+		if(!find_datum.find_origin || !finds_prob_cache[find_datum.find_origin]) // incorrect/no origin
+			continue
+		probability_counter[find_datum.find_origin] = initial(find_datum.find_prob) + probability_counter[find_datum.find_origin]
+		finds_prob_cache[find_datum.find_origin].Add(list(list("datum" = find_datum_type, "prob" = probability_counter[find_datum.find_origin])))
+	//global.xenoarchtest = finds_prob_cache
+	/* filled finds_prob_cache will look something like this:
+
+	finds_prob_cache = /list (6)
+		human = /list (2)
+			1 = /list (2)
+				datum = /datum/find/ancienthud
+				prob = 100
+			2 = /list (2)
+				datum = /datum/find/claymore
+				prob = 200
+		wizard = /list (1)
+			1 = /list (2)
+			datum = /datum/find/bowl/wizard
+			prob = 100
+		martian = /list (2)
+			1 = /list (2)
+			datum = /datum/find/bowl/martian
+			prob = 100
+		...and so on
+	*/
 
 /datum/controller/subsystem/xenoarch/proc/populate_z_level(asteroid_zlevel)
 	// Local lists for sonic speed.
@@ -90,20 +138,21 @@ SUBSYSTEM_DEF(xenoarch)
 
 		if(isnull(archeo_turf.finds))
 			archeo_turf.finds = list()
-
+			archeo_turf.digsite_origin = digsite
 			if(prob(50))
-				archeo_turf.finds += get_random_find(digsite, rand(7,74)) // rand(7,74) is how deep the find is. it gets multiplied by 2 so from 14 to 148
+				archeo_turf.finds.Add(list(list("excavation_required" = rand(7,74) * 2, "clearance_range" = pick(4, 6, 8, 10, 12)))) // rand(7,74) * 2 is how deep the find is. from 14 to 148
 			else if(prob(75))
-				archeo_turf.finds += get_random_find(digsite, rand(7,33))
-				archeo_turf.finds += get_random_find(digsite, rand(34,74))
+				archeo_turf.finds.Add(list(list("excavation_required" = rand(7,33) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
+				archeo_turf.finds.Add(list(list("excavation_required" = rand(34,74) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
 			else
-				archeo_turf.finds += get_random_find(digsite, rand(7,22))
-				archeo_turf.finds += get_random_find(digsite, rand(23,44))
-				archeo_turf.finds += get_random_find(digsite, rand(45,74))
+				archeo_turf.finds.Add(list(list("excavation_required" = rand(7,22) * 2 , "clearance_range" = pick(4, 6, 8, 10, 12))))
+				archeo_turf.finds.Add(list(list("excavation_required" = rand(23,44) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
+				archeo_turf.finds.Add(list(list("excavation_required" = rand(45,74) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
 
 			// Sometimes a find will be close enough to the surface to show
-			var/datum/find/F = archeo_turf.finds[1]
-			if(F.excavation_required <= FIND_VIEW_RANGE)
+			global.xenoarchtest = archeo_turf.finds
+			world.log << archeo_turf.finds[1]
+			if(archeo_turf.finds[1] && archeo_turf.finds[1]["excavation_required"] <= FIND_VIEW_RANGE)
 				archeo_turf.archaeo_overlay = "overlay_archaeo[rand(1,3)]"
 				archeo_turf.add_overlay(archeo_turf.archaeo_overlay)
 
@@ -170,12 +219,29 @@ SUBSYSTEM_DEF(xenoarch)
 	100;ORIGIN_HUMAN,
 	100;ORIGIN_WIZARD,
 	75;ORIGIN_MARTIAN,
-	75;ORIGIN_SILICON,
 	75;ORIGIN_ELDRITCH,
 	50;ORIGIN_PRECURSOR
 	)
 	return digsite_origin
 
-/datum/controller/subsystem/xenoarch/proc/get_random_find(origin, exc_req)
-	var/datum/find/F = new /datum/find/bowl/wizard(exc_req)
-	return F
+/datum/controller/subsystem/xenoarch/proc/spawn_find(origin, atom/loc, mob/user)
+	// picks a random find, based on given origin (e.g. ORIGIN_WIZARD),
+	// and spawns it on given location
+	var/probability_pick = rand(0, probability_counter[origin])
+	var/new_find_type
+	var/current_find_prob = 0
+	for(var/list/find_datum in finds_prob_cache[origin])
+		world.log << find_datum["prob"]
+		if(find_datum["prob"] >= probability_pick && !current_find_prob)
+			new_find_type = find_datum["datum"]
+			current_find_prob = find_datum["prob"]
+		if(find_datum["prob"] < current_find_prob && find_datum["prob"] >= probability_pick)
+			new_find_type = find_datum["datum"]
+			current_find_prob = find_datum["prob"]
+	if(!new_find_type)
+		return new /datum/find/bowl/wizard
+	var/datum/find/F = new new_find_type
+	if(user)
+		F.spawn_find(loc, user)
+	else
+		F.spawn_find(loc)
