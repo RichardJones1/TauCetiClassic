@@ -1,3 +1,59 @@
+
+//////////////////////////////////////////
+// Magical claymore - played by a ghost!
+/datum/find/magicalclaymore
+	find_type = /obj/item/weapon/claymore/light
+	find_name = "magical claymore"
+	find_cases = list("волшебный клеймор", "волшебного клеймора", "волшебному клеймору", "волшебный клеймор", "волшебным клеймором", "волшебному клеймору")
+	find_desc = "Двуручный боевой меч древнего образца. Тяжёлый, устрашающий и смертельно опасный в умелых руках. Рубин на его рукояти странно блестит..."
+
+	find_icon = 'icons/obj/xenoarchaeology/finds.dmi'
+	find_icon_state = "talking_claymore"
+	find_item_state = "claymore"
+
+	find_origin = ORIGIN_WIZARD
+	find_prob = FIND_PROBABILITY_UNCOMMON
+
+/datum/find/magicalclaymore/spawn_find(atom/loc, mob/living/carbon/human/H)
+	if(!loc)
+		return
+	var/obj/item/new_find = new find_type
+
+	stylize_find(new_find)
+
+	var/mob/living/simple_animal/hostile/mimic/copy/magicalclaymore/C = new /mob/living/simple_animal/hostile/mimic/copy/magicalclaymore(loc, new_find, H)
+	C.ChangeOwner(H)
+	create_spawner(/datum/spawner/living/talkingsword, C)
+
+	H.visible_message("<span class='notice'>[CASE(H, NOMINATIVE_CASE)] достает из породы [new_find]!</span>",
+		"<span class='notice'>Вы успешно заканчиваете раскопку, доставая из породы [new_find]!</span>")
+
+/mob/living/simple_animal/hostile/mimic/copy/magicalclaymore
+	name = "magical claymore"
+	cases = list("волшебный клеймор", "волшебного клеймора", "волшебному клеймору", "волшебный клеймор", "волшебным клеймором", "волшебному клеймору")
+	desc = "Двуручный боевой меч древнего образца. Тяжёлый, устрашающий и смертельно опасный в умелых руках. Рубин на его рукояти странно блестит..."
+	see_in_dark = 6
+	holder_type = /obj/item/weapon/holder/magicalclaymore
+
+/mob/living/simple_animal/hostile/mimic/copy/magicalclaymore/helpReaction(mob/living/attacker, show_message = TRUE)
+	if(!ishuman(attacker) || !Adjacent(attacker) || ismob(attacker.loc))
+		return ..()
+	get_scooped(attacker)
+
+/obj/item/weapon/holder/magicalclaymore
+	name = "magical claymore"
+	cases = list("волшебный клеймор", "волшебного клеймора", "волшебному клеймору", "волшебный клеймор", "волшебным клеймором", "волшебному клеймору")
+	desc = "Двуручный боевой меч древнего образца. Тяжёлый, устрашающий и смертельно опасный в умелых руках. Рубин на его рукояти странно блестит..."
+
+	icon = 'icons/obj/xenoarchaeology/finds.dmi'
+	icon_state = "talking_claymore"
+	item_state = "claymore"
+
+	force = 20
+
+	w_class = SIZE_SMALL
+	flags = HEAR_PASS_SAY
+
 //////////////////////////////////////////
 // Magical cape - lets you "fly" around
 /datum/find/magicalcape

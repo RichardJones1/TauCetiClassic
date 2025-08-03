@@ -80,7 +80,7 @@ SUBSYSTEM_DEF(xenoarch)
 			continue
 		probability_counter[find_datum.find_origin] = initial(find_datum.find_prob) + probability_counter[find_datum.find_origin]
 		finds_prob_cache[find_datum.find_origin].Add(list(list("datum" = find_datum_type, "prob" = probability_counter[find_datum.find_origin])))
-	//global.xenoarchtest = finds_prob_cache
+	global.xenoarchtest = finds_prob_cache
 	/* filled finds_prob_cache will look something like this:
 
 	finds_prob_cache = /list (6)
@@ -140,21 +140,20 @@ SUBSYSTEM_DEF(xenoarch)
 			archeo_turf.finds = list()
 			archeo_turf.digsite_origin = digsite
 			if(prob(50))
-				archeo_turf.finds.Add(list(list("excavation_required" = rand(7,74) * 2, "clearance_range" = pick(4, 6, 8, 10, 12)))) // rand(7,74) * 2 is how deep the find is. from 14 to 148
+				archeo_turf.finds += new /datum/find_excavation(rand(7,74) * 2)
 			else if(prob(75))
-				archeo_turf.finds.Add(list(list("excavation_required" = rand(7,33) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
-				archeo_turf.finds.Add(list(list("excavation_required" = rand(34,74) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
+				archeo_turf.finds += new /datum/find_excavation(rand(7,33) * 2)
+				archeo_turf.finds += new /datum/find_excavation(rand(34,74) * 2)
 			else
-				archeo_turf.finds.Add(list(list("excavation_required" = rand(7,22) * 2 , "clearance_range" = pick(4, 6, 8, 10, 12))))
-				archeo_turf.finds.Add(list(list("excavation_required" = rand(23,44) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
-				archeo_turf.finds.Add(list(list("excavation_required" = rand(45,74) * 2, "clearance_range" = pick(4, 6, 8, 10, 12))))
-
+				archeo_turf.finds += new /datum/find_excavation(rand(7,22) * 2)
+				archeo_turf.finds += new /datum/find_excavation(rand(23,44) * 2)
+				archeo_turf.finds += new /datum/find_excavation(rand(45,74) * 2)
 			// Sometimes a find will be close enough to the surface to show
-			global.xenoarchtest = archeo_turf.finds
-			world.log << archeo_turf.finds[1]
-			if(archeo_turf.finds[1] && archeo_turf.finds[1]["excavation_required"] <= FIND_VIEW_RANGE)
-				archeo_turf.archaeo_overlay = "overlay_archaeo[rand(1,3)]"
-				archeo_turf.add_overlay(archeo_turf.archaeo_overlay)
+			if(archeo_turf.finds && archeo_turf.finds.len)
+				var/datum/find_excavation/F = archeo_turf.finds[1]
+				if(F.excavation_required <= FIND_VIEW_RANGE)
+					archeo_turf.archaeo_overlay = "overlay_archaeo[rand(1,3)]"
+					archeo_turf.add_overlay(archeo_turf.archaeo_overlay)
 
 			archeo_turf.prepare_huds()
 			var/datum/atom_hud/mine/mine = global.huds[DATA_HUD_MINER]

@@ -5,6 +5,7 @@
 #define FIND_PROBABILITY_UNCOMMON 75
 #define FIND_PROBABILITY_COMMON 100 // Normal chance
 #define FIND_PROBABILITY_EXTREME 150
+#define FIND_PROBABILITY_DEBUG 10000
 
 #define FIND_VIEW_RANGE 20 // how close excavation has to come to show a xenoarch overlay on the mine turf
 

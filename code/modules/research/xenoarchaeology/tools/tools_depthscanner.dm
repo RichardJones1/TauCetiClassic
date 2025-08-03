@@ -37,8 +37,9 @@
 
 			//find the first artifact and store it
 			if(M.finds.len)
-				D.depth = M.finds[1]["excavation_required"]
-				D.clearance = M.finds[1]["clearance_range"]
+				var/datum/find_excavation/F = M.finds[1]
+				D.depth = F.excavation_required
+				D.clearance = F.clearance_range
 
 			positive_locations.Add(D)
 

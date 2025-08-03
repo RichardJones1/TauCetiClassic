@@ -1,3 +1,11 @@
+/datum/find_excavation						// used for mining the asteroid turfs
+	var/excavation_required = 0		                // how deep its located in the mine turf - from 0 to 150
+	var/clearance_range = 4			                // how close excavation has to come to extract the item (with one take)
+
+/datum/find_excavation/New(exc_req)
+	excavation_required = exc_req
+	clearance_range = pick(4, 6, 8, 10, 12)
+
 /datum/find                                 // INFO about the item we will be getting:
 	var/find_type = /obj/item               // type // In case they need to be overwritten:
 
@@ -5,14 +13,12 @@
 	var/find_desc = ""                              // description
 	var/find_icon = FALSE                           // icon
 	var/find_icon_state = ""                        // icon_state
+	var/find_item_state = ""                        // item_state
 	var/find_item_state_world = ""                  // item_state_world
 	var/list/find_cases = list()                    // cases - for naming in russian
 
 	var/find_prob = FIND_PROBABILITY_ZERO           // probability of getting it
 	var/find_origin = ORIGIN_HUMAN                  // finds with the same origin are usually found near each other
-
-	var/excavation_required = 0		                // how deep its located in the mine turf - from 0 to 150
-	var/clearance_range = 4			                // how close excavation has to come to extract the item (with one take)
 
 /datum/find/proc/spawn_find(atom/loc, mob/living/carbon/human/H)
 	if(!loc)
@@ -40,6 +46,8 @@
 		new_find.icon = find_icon
 	if(find_icon_state)
 		new_find.icon_state = find_icon_state
+	if(find_item_state)
+		new_find.item_state = find_item_state
 	if(find_item_state_world)
 		new_find.item_state_inventory = new_find.icon_state
 		new_find.item_state_world = find_item_state_world

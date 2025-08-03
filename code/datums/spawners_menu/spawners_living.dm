@@ -132,6 +132,26 @@
 	ranks = list(ROLE_DRONE)
 
 /*
+ * Xenoarch
+*/
+
+/datum/spawner/living/talkingsword
+	name = "Древний меч"
+	desc = "Вы проснулись после тысячелетнего сна."
+	cooldown = 1 MINUTES
+	time_for_registration = null
+	register_only = FALSE
+
+/datum/spawner/living/talkingsword/spawn_body(mob/dead/spectator)
+	..()
+	to_chat(mob, greet_message())
+
+/datum/spawner/living/talkingsword/proc/greet_message()
+	. = "<span class='notice'><B>Вы просыпаетесь после тысячелетнего сна...</B></span><BR>"
+	. += "<B>Когда-то вами владел могущественный маг. Но он пал, и меч был утерян в холодных недрах астероида.</B><BR>"
+	. += "<B>Теперь вы пробуждаетесь вновь, связаны с новым хозяином и судьбой, ожидающей быть написанной.</B>"
+
+/*
  * Religion
 */
 /datum/spawner/living/religion_familiar

@@ -176,9 +176,6 @@
 		qdel(src)
 
 /obj/item/weapon/ore/strangerock/proc/reveal_find(prob_chance, mob/user)
-	if(!find_inside)
-		visible_message("<span class='notice'>Внутри [CASE(src, GENITIVE_CASE)] ничего не оказалось!</span>")
-		return
 	if(prob(prob_chance))
 		SSxenoarch.spawn_find(digsite_origin, get_turf(src), user)
 		visible_message("<span class='notice'>[capitalize(CASE(src, NOMINATIVE_CASE))] осторожно рассыпается, внутри него что-то оказалось!</span>")
