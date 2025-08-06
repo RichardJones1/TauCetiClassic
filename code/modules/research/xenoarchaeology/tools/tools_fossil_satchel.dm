@@ -1,15 +1,3 @@
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Miscellaneous xenoarchaeology tools
-
-/obj/item/device/measuring_tape
-	name = "measuring tape"
-	desc = "A coiled metallic tape used to check dimensions and lengths."
-	icon = 'icons/obj/xenoarchaeology/tools.dmi'
-	icon_state = "measuring"
-	item_state = "measuring"
-	w_class = SIZE_TINY
-
 /obj/item/weapon/storage/bag/fossils
 	name = "Fossil Satchel"
 	desc = "Transports delicate fossils in suspension so they don't break during transit."

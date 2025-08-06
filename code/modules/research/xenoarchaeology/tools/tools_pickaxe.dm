@@ -6,6 +6,7 @@
 	name = "brush"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick_brush"
+	item_state_world = "pick_brush_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "Thick metallic wires for clearing away dust and loose scree (1 centimetre excavation depth)."
@@ -18,6 +19,7 @@
 	name = "1/6 pick"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick1"
+	item_state_world = "pick1_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "A miniature excavation tool for precise digging (2 centimetre excavation depth)."
@@ -30,6 +32,7 @@
 	name = "1/3 pick"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick2"
+	item_state_world = "pick2_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "A miniature excavation tool for precise digging (4 centimetre excavation depth)."
@@ -42,6 +45,7 @@
 	name = "1/2 pick"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick3"
+	item_state_world = "pick3_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "A miniature excavation tool for precise digging (6 centimetre excavation depth)."
@@ -54,6 +58,7 @@
 	name = "2/3 pick"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick4"
+	item_state_world = "pick4_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "A miniature excavation tool for precise digging (8 centimetre excavation depth)."
@@ -66,6 +71,7 @@
 	name = "5/6 pick"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick5"
+	item_state_world = "pick5_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "A miniature excavation tool for precise digging (10 centimetre excavation depth)."
@@ -78,6 +84,7 @@
 	name = "1/1 pick"
 	icon = 'icons/obj/xenoarchaeology/tools.dmi'
 	icon_state = "pick6"
+	item_state_world = "pick6_world"
 	item_state = "syringe_0"
 	toolspeed = 0.4
 	desc = "A miniature excavation tool for precise digging (12 centimetre excavation depth)."

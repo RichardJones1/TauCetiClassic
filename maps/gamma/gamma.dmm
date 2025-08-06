@@ -86885,7 +86885,6 @@
 /area/station/maintenance/bridge)
 "qpO" = (
 /obj/structure/table/glass,
-/obj/machinery/bunsen_burner,
 /turf/simulated/floor,
 /area/station/maintenance/brig)
 "qpP" = (

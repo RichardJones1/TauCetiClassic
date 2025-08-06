@@ -185,9 +185,6 @@
 	else if(istype(target, /obj/item/clothing/suit/space/space_ninja))
 		return
 
-	else if(istype(target, /obj/machinery/bunsen_burner))
-		return
-
 	else if(istype(target, /obj/machinery/smartfridge))
 		return
 

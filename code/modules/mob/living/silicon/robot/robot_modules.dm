@@ -388,7 +388,6 @@
 
 	modules += new /obj/item/device/depth_scanner(src)
 	modules += new /obj/item/weapon/pickaxe/cyb(src)
-	modules += new /obj/item/device/measuring_tape(src) //To unfuck xenoarcheology up
 
 	modules += new /obj/item/weapon/circular_saw(src)
 	modules += new /obj/item/weapon/scalpel(src)

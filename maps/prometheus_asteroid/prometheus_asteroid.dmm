@@ -2188,9 +2188,6 @@
 /area/asteroid/research_outpost/spectro)
 "hV" = (
 /obj/structure/table,
-/obj/machinery/bunsen_burner{
-	pixel_y = 2
-	},
 /obj/machinery/alarm{
 	pixel_y = 22
 	},

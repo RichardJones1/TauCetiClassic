@@ -225,14 +225,6 @@ var/global/const/INGEST = 2
 
 				var/datum/chemical_reaction/C = reaction
 
-				//check if this recipe needs to be heated to mix
-				if(C.requires_heating)
-					if(istype(my_atom.loc, /obj/machinery/bunsen_burner))
-						if(!my_atom.loc:heated)
-							continue
-					else
-						continue
-
 				var/total_required_reagents = C.required_reagents.len
 				var/total_matching_reagents = 0
 				var/total_required_catalysts = C.required_catalysts.len

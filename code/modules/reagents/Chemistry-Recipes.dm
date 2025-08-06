@@ -13,7 +13,6 @@
 	var/result_amount = 0
 	var/secondary = 0 // set to nonzero if secondary reaction
 	var/list/secondary_results = list()		//additional reagents produced by the reaction
-	var/requires_heating = 0
 
 /datum/chemical_reaction/proc/on_reaction(datum/reagents/holder, created_volume)
 	return

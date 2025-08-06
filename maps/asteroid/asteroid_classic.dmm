@@ -1058,9 +1058,6 @@
 /area/asteroid/research_outpost/sample)
 "cu" = (
 /obj/structure/table,
-/obj/machinery/bunsen_burner{
-	pixel_y = 2
-	},
 /turf/simulated/floor{
 	icon_state = "whitechoco"
 	},
